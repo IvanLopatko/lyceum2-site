@@ -25,7 +25,7 @@ $pageUrl = static fn(int $n): string => $n === 1 ? $base : $base . 'storinka/' .
     <?php foreach ($items as $n): ?>
       <li><a href="<?= e(url(news_url($n))) ?>">
         <?php if ($cv = news_cover($n)): ?><img src="<?= e(upload_url($cv)) ?>" alt="" loading="lazy"><?php else: ?><span class="news-ph" aria-hidden="true"></span><?php endif; ?>
-        <span class="news-body"><span class="tag"><?= e(tax_name('news', $n['categories'][0] ?? 'zhyttia')) ?></span><b><?= e($n['title']) ?></b><time datetime="<?= e(substr($n['date'], 0, 10)) ?>"><?= e(ua_date($n['date'])) ?></time></span>
+        <span class="news-body"><span class="tag is-<?= e($n['categories'][0] ?? 'zhyttia') ?>"><?= e(tax_name('news', $n['categories'][0] ?? 'zhyttia')) ?></span><b><?= e($n['title']) ?></b><time datetime="<?= e(substr($n['date'], 0, 10)) ?>"><?= e(ua_date($n['date'])) ?></time></span>
       </a></li>
     <?php endforeach; ?>
   </ul>

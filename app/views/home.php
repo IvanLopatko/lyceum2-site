@@ -14,15 +14,15 @@ $days = days_to($plan['start'] ?? '2027-09-01');
 $pupils = (int) preg_replace('~\D~', '', (string) ($n['pupils'] ?? '0'));
 $classes = (int) preg_replace('~\D~', '', (string) ($n['classes'] ?? '0'));
 $tiles = [
-    ['rozklad', '/navchannia/rozklad/', 'Розклад уроків і дзвінків', 'Уроки по класах, дзвінки, структура навчального року', true],
-    ['vstup', '/batkam-i-uchniam/vstup/', 'Вступ до ліцею', 'Документи, правила прийому, територія'],
-    ['harchuvannia', '/batkam-i-uchniam/harchuvannia/', 'Харчування', 'Меню, режим, пільги'],
-    ['bezpeka', '/pidtrymka-i-bezpeka/bezpeka-i-ukryttia/', 'Безпека і укриття', 'Дії під час тривоги, дві зміни'],
-    ['psyholog', '/pidtrymka-i-bezpeka/psyhologichna-sluzhba/', 'Психологічна служба', 'Підтримка учнів і батьків'],
-    ['inkliuziia', '/pidtrymka-i-bezpeka/inkliuzyvne-navchannia/', 'Інклюзивне навчання', 'Команда супроводу, асистенти'],
-    ['profilna', '/navchannia/profilna-shkola/', 'Профільна школа', 'Академічний ліцей з 2027 року'],
-    ['dokumenty', '/dokumenty/', 'Документи', 'Реєстр за статтею 30'],
-    ['gurtky', '/gurtky/', 'Гуртки і клуби', 'Пласт, спорт, творчість'],
+    ['rozklad', '/navchannia/rozklad/', 'Розклад уроків і дзвінків', 'Уроки по класах, дзвінки, структура навчального року', 'wide'],
+    ['vstup', '/batkam-i-uchniam/vstup/', 'Вступ до ліцею', 'Документи, правила прийому, територія', 'sun'],
+    ['harchuvannia', '/batkam-i-uchniam/harchuvannia/', 'Харчування', 'Меню, режим, пільги', 'sail'],
+    ['bezpeka', '/pidtrymka-i-bezpeka/bezpeka-i-ukryttia/', 'Безпека і укриття', 'Дії під час тривоги, дві зміни', 'blue'],
+    ['psyholog', '/pidtrymka-i-bezpeka/psyhologichna-sluzhba/', 'Психологічна служба', 'Підтримка учнів і батьків', 'green'],
+    ['inkliuziia', '/pidtrymka-i-bezpeka/inkliuzyvne-navchannia/', 'Інклюзивне навчання', 'Команда супроводу, асистенти', 'green'],
+    ['profilna', '/navchannia/profilna-shkola/', 'Профільна школа', 'Академічний ліцей з 2027 року', 'sun'],
+    ['dokumenty', '/dokumenty/', 'Документи', 'Реєстр за статтею 30', 'sail'],
+    ['gurtky', '/gurtky/', 'Гуртки і клуби', 'Пласт, спорт, творчість', 'blue'],
 ];
 ?>
 <section class="hero">
@@ -57,7 +57,7 @@ $tiles = [
     <div class="sec-head"><h2 id="h-quick">Швидко знайти</h2></div>
     <ul class="bento">
       <?php foreach ($tiles as $t): ?>
-        <li class="<?= !empty($t[4]) ? 'is-wide' : '' ?>"><a href="<?= e(url($t[1])) ?>" style="--art:url('<?= e(url('/assets/img/tiles/' . $t[0] . '.svg')) ?>')"><b><?= e($t[2]) ?></b><span><?= e($t[3]) ?></span></a></li>
+        <li class="is-<?= e($t[4]) ?>"><a href="<?= e(url($t[1])) ?>"><img class="bento-art" src="<?= e(url('/assets/img/tiles/' . $t[0] . '.svg')) ?>" alt="" width="200" height="150"><b><?= e($t[2]) ?></b><span><?= e($t[3]) ?></span></a></li>
       <?php endforeach; ?>
     </ul>
   </div>
@@ -70,11 +70,11 @@ $tiles = [
     <div class="news-home">
       <a class="news-lead" href="<?= e(url(news_url($lead))) ?>">
         <?php if ($cv = news_cover($lead)): ?><img src="<?= e(upload_url($cv)) ?>" alt="" loading="lazy"><?php else: ?><span class="news-ph" aria-hidden="true"></span><?php endif; ?>
-        <span class="news-body"><span class="tag"><?= e(tax_name('news', $lead['categories'][0] ?? 'zhyttia')) ?></span><b><?= e($lead['title']) ?></b><span class="news-ex"><?= e(excerpt(implode(' ', $lead['text']), 180)) ?></span><time datetime="<?= e(substr($lead['date'], 0, 10)) ?>"><?= e(ua_date($lead['date'])) ?></time></span>
+        <span class="news-body"><span class="tag is-<?= e($lead['categories'][0] ?? 'zhyttia') ?>"><?= e(tax_name('news', $lead['categories'][0] ?? 'zhyttia')) ?></span><b><?= e($lead['title']) ?></b><span class="news-ex"><?= e(excerpt(implode(' ', $lead['text']), 180)) ?></span><time datetime="<?= e(substr($lead['date'], 0, 10)) ?>"><?= e(ua_date($lead['date'])) ?></time></span>
       </a>
       <ul class="news-list">
         <?php foreach ($rest as $r): ?>
-          <li><a href="<?= e(url(news_url($r))) ?>"><span class="tag"><?= e(tax_name('news', $r['categories'][0] ?? 'zhyttia')) ?></span><b><?= e($r['title']) ?></b><time datetime="<?= e(substr($r['date'], 0, 10)) ?>"><?= e(ua_date($r['date'])) ?></time></a></li>
+          <li><a href="<?= e(url(news_url($r))) ?>"><span class="tag is-<?= e($r['categories'][0] ?? 'zhyttia') ?>"><?= e(tax_name('news', $r['categories'][0] ?? 'zhyttia')) ?></span><b><?= e($r['title']) ?></b><time datetime="<?= e(substr($r['date'], 0, 10)) ?>"><?= e(ua_date($r['date'])) ?></time></a></li>
         <?php endforeach; ?>
       </ul>
     </div>

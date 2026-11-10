@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
-<path d="M74 22c-6 7 6 11 0 18M94 18c-6 7 6 11 0 18M114 22c-6 7 6 11 0 18" stroke="#CFE1FF" stroke-width="5" stroke-linecap="round"/>
-<ellipse cx="72" cy="70" rx="17" ry="10" fill="#8DB9F5" transform="rotate(-18 72 70)"/><ellipse cx="116" cy="68" rx="17" ry="10" fill="#CFE1FF" transform="rotate(16 116 68)"/>
-<circle cx="94" cy="64" r="16" fill="#fff"/><circle cx="94" cy="64" r="8" fill="#FFC83D"/>
-<rect x="30" y="74" width="128" height="12" rx="6" fill="#0F4FB8"/>
-<path d="M36 84h116c0 30-26 50-58 50S36 114 36 84z" fill="#1C6FE0"/>
+<path d="M74 22c-6 7 6 11 0 18M94 18c-6 7 6 11 0 18M114 22c-6 7 6 11 0 18" stroke="#F7A39D" stroke-width="5" stroke-linecap="round"/>
+<ellipse cx="72" cy="70" rx="17" ry="10" fill="#1DB866" transform="rotate(-18 72 70)"/><ellipse cx="116" cy="68" rx="17" ry="10" fill="#9BE3BD" transform="rotate(16 116 68)"/>
+<circle cx="94" cy="64" r="16" fill="#fff"/><circle cx="94" cy="64" r="8" fill="#FFD23F"/>
+<rect x="30" y="74" width="128" height="12" rx="6" fill="#1866CC"/>
+<path d="M36 84h116c0 30-26 50-58 50S36 114 36 84z" fill="#1C74E8"/>
 <path d="M56 100c8 12 22 18 38 18" stroke="#8DB9F5" stroke-width="5" stroke-linecap="round"/>
-<circle cx="166" cy="110" r="20" fill="#4B95FF"/><path d="M166 90c0-6 2-10 6-12" stroke="#14204A" stroke-width="4" stroke-linecap="round"/><path d="M168 86c6-10 16-10 20-6-6 8-14 10-20 6z" fill="#8DB9F5"/>
-<path d="M180 34L181.6 38.4L186 40L181.6 41.6L180 46L178.4 41.6L174 40L178.4 38.4Z" fill="#4B95FF"/><path d="M22 110L23.6 114.4L28 116L23.6 117.6L22 122L20.4 117.6L16 116L20.4 114.4Z" fill="#FFC83D"/>
+<circle cx="166" cy="110" r="20" fill="#E8433A"/><path d="M166 90c0-6 2-10 6-12" stroke="#16224A" stroke-width="4" stroke-linecap="round"/><path d="M168 86c6-10 16-10 20-6-6 8-14 10-20 6z" fill="#1DB866"/>
+<path d="M180 34L181.6 38.4L186 40L181.6 41.6L180 46L178.4 41.6L174 40L178.4 38.4Z" fill="#E8433A"/><path d="M22 110L23.6 114.4L28 116L23.6 117.6L22 122L20.4 117.6L16 116L20.4 114.4Z" fill="#FFD23F"/>
 </svg>

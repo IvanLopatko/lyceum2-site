@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-const CALLOUT_TONES = ['sun' => 'note', 'blue' => 'info', 'green' => 'info', 'sail' => 'alert', 'note' => 'note', 'info' => 'info', 'alert' => 'alert'];
+const CALLOUT_TONES = ['sun' => 'sun', 'blue' => 'blue', 'green' => 'green', 'sail' => 'sail', 'note' => 'sun', 'info' => 'blue', 'alert' => 'sail'];
 
 function render_blocks(array $blocks, array $ctx = []): string
 {
@@ -92,7 +92,7 @@ function render_block(array $b, array $ctx): string
             return '<div class="table-wrap" tabindex="0"><table>' . ($h ? "<thead><tr>$h</tr></thead>" : '') . "<tbody>$r</tbody></table></div>\n";
 
         case 'callout':
-            $tone = CALLOUT_TONES[$b['tone'] ?? 'note'] ?? 'note';
+            $tone = CALLOUT_TONES[$b['tone'] ?? 'sun'] ?? 'sun';
             return '<aside class="callout is-' . $tone . '">' . (!empty($b['title']) ? '<h3>' . $b['title'] . '</h3>' : '') . '<p>' . $b['text'] . "</p></aside>\n";
 
         case 'buttons':

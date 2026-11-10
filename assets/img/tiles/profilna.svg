@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
-<ellipse cx="104" cy="138" rx="32" ry="6" fill="#F2B21C"/>
-<rect x="99" y="36" width="10" height="102" rx="4" fill="#14204A"/>
-<path d="M109 42h52l14 12-14 12h-52z" fill="#1C6FE0"/>
-<path d="M99 72H50L36 84l14 12h49z" fill="#4B95FF"/>
-<path d="M109 102h44l12 10-12 10h-44z" fill="#8DB9F5"/>
-<path d="M14 34l32-14 32 14-32 14z" fill="#14204A"/><path d="M28 40v12c10 8 26 8 36 0V40l-18 8z" fill="#2A3766"/><path d="M78 34v18" stroke="#FFC83D" stroke-width="4" stroke-linecap="round"/><circle cx="78" cy="55" r="4" fill="#FFC83D"/>
-<path d="M186 19L187.9 24.1L193 26L187.9 27.9L186 33L184.1 27.9L179 26L184.1 24.1Z" fill="#fff"/><path d="M30 113L31.4 116.6L35 118L31.4 119.4L30 123L28.6 119.4L25 118L28.6 116.6Z" fill="#14204A"/>
+<ellipse cx="104" cy="138" rx="32" ry="6" fill="#E0A800"/>
+<rect x="99" y="36" width="10" height="102" rx="4" fill="#16224A"/>
+<path d="M109 42h52l14 12-14 12h-52z" fill="#1C74E8"/>
+<path d="M99 72H50L36 84l14 12h49z" fill="#E8433A"/>
+<path d="M109 102h44l12 10-12 10h-44z" fill="#1DB866"/>
+<path d="M14 34l32-14 32 14-32 14z" fill="#16224A"/><path d="M28 40v12c10 8 26 8 36 0V40l-18 8z" fill="#2E3E72"/><path d="M78 34v18" stroke="#FFD23F" stroke-width="4" stroke-linecap="round"/><circle cx="78" cy="55" r="4" fill="#FFD23F"/>
+<path d="M186 19L187.9 24.1L193 26L187.9 27.9L186 33L184.1 27.9L179 26L184.1 24.1Z" fill="#fff"/><path d="M30 113L31.4 116.6L35 118L31.4 119.4L30 123L28.6 119.4L25 118L28.6 116.6Z" fill="#16224A"/>
 </svg>

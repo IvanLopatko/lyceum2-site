@@ -8,7 +8,7 @@ $more = array_slice($more, 0, 3);
 <article class="news-item">
   <header class="page-head"><div class="wrap">
     <nav class="crumbs" aria-label="Ви тут"><a href="<?= e(url('/')) ?>">Головна</a><a href="<?= e(url('/novyny/')) ?>">Новини</a><span aria-current="page"><?= e(excerpt($item['title'], 60)) ?></span></nav>
-    <p class="tags"><?php foreach ($item['categories'] as $c): ?><a class="tag" href="<?= e(url('/novyny/rubryka/' . $c . '/')) ?>"><?= e(tax_name('news', $c)) ?></a><?php endforeach; ?></p>
+    <p class="tags"><?php foreach ($item['categories'] as $c): ?><a class="tag is-<?= e($c) ?>" href="<?= e(url('/novyny/rubryka/' . $c . '/')) ?>"><?= e(tax_name('news', $c)) ?></a><?php endforeach; ?></p>
     <h1><?= e($item['title']) ?></h1>
     <p class="meta"><time datetime="<?= e(substr($item['date'], 0, 10)) ?>"><?= e(ua_date($item['date'])) ?></time></p>
   </div></header>

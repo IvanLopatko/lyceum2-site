@@ -77,7 +77,7 @@ function clean_blocks(array $blocks, bool $allowHtml): array
                 $c['rows'] = array_map(static fn($r) => array_map('ci', is_array($r) ? $r : []), is_array($b['rows'] ?? null) ? $b['rows'] : []);
                 break;
             case 'callout':
-                $c['tone'] = in_array($b['tone'] ?? '', ['info', 'note', 'alert'], true) ? $b['tone'] : (CALLOUT_TONES[$b['tone'] ?? ''] ?? 'note');
+                $c['tone'] = CALLOUT_TONES[$b['tone'] ?? ''] ?? 'sun';
                 $c['title'] = ct($b['title'] ?? '');
                 $c['text'] = ci($b['text'] ?? '');
                 break;

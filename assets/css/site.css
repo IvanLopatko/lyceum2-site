@@ -5,28 +5,37 @@
    ═══════════════════════════════════════════════════════════ */
 
 :root {
-  --ink: #14204A;
-  --ink-2: #4A5679;
-  --ink-3: #8790AE;
-  --line: #E4E9F3;
+  --ink: #16224A;
+  --ink-2: #4E5A80;
+  --ink-3: #8E97B5;
+  --line: #E7EBF5;
   --bg: #FFFFFF;
-  --soft: #F5F8FE;
-  --blue: #1C6FE0;
+  --soft: #F3F8FF;
+  --blue: #1C74E8;
   --blue-2: #3D8BFF;
-  --blue-deep: #0F4FB8;
-  --blue-t: #E8F1FF;
-  --sun: #FFC83D;
-  --sun-t: #FFF5D6;
-  --sun-d: #7E5B00;
+  --blue-deep: #1158C4;
+  --blue-t: #E3EFFF;
+  --sun: #FFD23F;
+  --sun-t: #FFF5CC;
+  --sun-d: #8A6400;
+  --sail: #E8433A;
+  --sail-t: #FFE4E0;
+  --green: #1DB866;
+  --green-d: #0E8A4A;
+  --green-t: #DDF7E8;
   --ok: #0C7A42;   --ok-t: #E2F5EA;
   --due: #8A5D00;  --due-t: #FFF1CC;
   --bad: #B8322A;  --bad-t: #FCE7E5;
 
-  --grad: linear-gradient(135deg, #1C6FE0 0%, #3D8BFF 100%);
-  --grad-deep: linear-gradient(135deg, #0F4FB8 0%, #1C6FE0 52%, #4A97FF 100%);
+  --grad: linear-gradient(135deg, #1C74E8 0%, #3D8BFF 100%);
+  --grad-deep: linear-gradient(135deg, #1158C4 0%, #1C74E8 50%, #4A9BFF 100%);
   --grad-soft: linear-gradient(160deg, #F7FAFF 0%, #EAF2FF 100%);
-  --grad-sun: linear-gradient(135deg, #FFDA6B 0%, #FFB52E 100%);
-  --grad-text: linear-gradient(120deg, #0F4FB8 0%, #2F82F5 100%);
+  --grad-sun: linear-gradient(135deg, #FFE27A 0%, #FFD23F 100%);
+  --grad-text: linear-gradient(120deg, #1158C4 0%, #2F86F5 100%);
+  --g-blue: linear-gradient(150deg, #F0F6FF 0%, #DCEAFF 100%);
+  --g-sun: linear-gradient(150deg, #FFE787 0%, #FFD23F 100%);
+  --g-sail: linear-gradient(150deg, #FFF0EC 0%, #FFDCD5 100%);
+  --g-green: linear-gradient(150deg, #EAFBF1 0%, #D2F4E1 100%);
 
   --display: "Unbounded", "Trebuchet MS", system-ui, sans-serif;
   --body: "Onest", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -121,8 +130,8 @@ small { font-size: .82em; }
 
 /* ── секції ── */
 .sec { padding-block: var(--sec); }
-.sec + .sec:not(.sec-soft) { padding-top: 0; }
-.sec-soft { background: var(--grad-soft); }
+.sec:not(.sec-soft) + .sec:not(.sec-soft) { padding-top: 0; }
+.sec-soft { background: linear-gradient(180deg, rgba(238, 244, 255, 0) 0, #EEF4FF clamp(56px, 7vw, 110px), #EEF4FF calc(100% - clamp(56px, 7vw, 110px)), rgba(238, 244, 255, 0) 100%); }
 .sec-tight { padding-block: 40px var(--sec); }
 .sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
 .sec-head.is-col { flex-direction: column; align-items: flex-start; margin: 0; gap: 14px; }
@@ -166,19 +175,24 @@ small { font-size: .82em; }
 /* ── «Швидко знайти» ── */
 .bento { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
 .bento li.is-wide { grid-column: span 2; grid-row: span 2; }
+.bento .is-sun a { background: var(--g-sun); box-shadow: none; }
+.bento .is-sun span { color: #5E4A0A; }
+.bento .is-sail a { background: var(--g-sail); box-shadow: none; }
+.bento .is-green a { background: var(--g-green); box-shadow: none; }
+.bento .is-blue a { background: var(--g-blue); box-shadow: none; }
 .bento a {
   position: relative; isolation: isolate; overflow: hidden; height: 100%; min-height: 210px;
   display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 22px 24px;
   border-radius: var(--r-lg); background: var(--grad-soft); color: var(--ink); text-decoration: none;
   box-shadow: inset 0 0 0 1px var(--line); transition: transform .4s var(--ease), box-shadow .4s;
 }
-.bento a::before { content: ""; position: absolute; z-index: -1; top: 16px; right: 16px; width: 60%; height: calc(100% - 100px); background: var(--art) right top / contain no-repeat; transition: transform .6s var(--ease); }
+.bento-art { position: absolute; z-index: -1; top: 16px; right: 16px; width: 60%; height: calc(100% - 100px); object-fit: contain; object-position: right top; transition: transform .6s var(--ease); }
 .bento b { font-family: var(--display); font-weight: 600; font-size: 1.05rem; letter-spacing: -.015em; line-height: 1.2; }
 .bento span { font-size: .88rem; color: var(--ink-2); }
 .bento a:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--blue-t), var(--sh-lift); }
-.bento a:hover::before { transform: translateY(-4px) rotate(-2deg) scale(1.04); }
+.bento a:hover .bento-art { transform: translateY(-4px) rotate(-2deg) scale(1.04); }
 .bento .is-wide a { background: var(--grad-deep); color: #fff; box-shadow: none; padding: 30px 32px; }
-.bento .is-wide a::before { width: 84%; height: calc(100% - 120px); top: 24px; right: 24px; }
+.bento .is-wide .bento-art { width: 84%; height: calc(100% - 120px); top: 24px; right: 24px; }
 .bento .is-wide b { font-size: 1.5rem; color: #fff; }
 .bento .is-wide span { color: rgba(255, 255, 255, .85); }
 
@@ -316,8 +330,8 @@ a.doc:hover { box-shadow: inset 0 0 0 1px var(--blue-2), var(--sh); transform: t
 .list { list-style: none; padding: 0; display: grid; gap: .55em; }
 .list li { position: relative; padding-left: 1.6em; }
 .list li { padding-left: 1.75em; }
-.list li::before { content: ""; position: absolute; left: .12em; top: .3em; width: .78em; height: .86em; background: var(--grad); clip-path: polygon(58% 0, 100% 100%, 4% 100%); }
-.list li::after { content: ""; position: absolute; left: 0; top: 1.22em; width: 1em; height: 3px; border-radius: 3px; background: var(--sun); }
+.list li::before { content: ""; position: absolute; left: .12em; top: .3em; width: .78em; height: .86em; background: linear-gradient(160deg, #FF6A55 0%, var(--sail) 70%); clip-path: polygon(58% 0, 100% 100%, 4% 100%); }
+.list li::after { content: ""; position: absolute; left: 0; top: 1.22em; width: 1em; height: 3px; border-radius: 3px; background: var(--blue); }
 
 /* кроки: нумеровані кружечки, з’єднані лінією */
 .steps { list-style: none; padding: 0; counter-reset: s; display: grid; gap: 0; }
@@ -574,11 +588,11 @@ tbody tr:hover td { background: #FAFCFF; }
   .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .bento li.is-wide { grid-column: 1 / -1; grid-row: auto; }
   .bento a { min-height: 168px; padding: 16px; border-radius: 20px; }
-  .bento a::before { height: 78px; width: 72%; top: 12px; right: 12px; }
+  .bento-art { height: 78px; width: 72%; top: 12px; right: 12px; }
   .bento li:not(.is-wide) span { display: none; }
   .bento li:not(.is-wide) b { font-size: .95rem; }
   .bento .is-wide a { min-height: 300px; padding: 24px; }
-  .bento .is-wide a::before { height: 150px; width: 82%; top: 18px; right: 18px; }
+  .bento .is-wide .bento-art { height: 150px; width: 82%; top: 18px; right: 18px; }
   .bento .is-wide b { font-size: 1.3rem; }
   .today { grid-template-columns: minmax(0, 1fr); padding: 18px 20px; }
   .today li { border-left: 0; padding-left: 0; padding-block: 4px; }
@@ -598,3 +612,81 @@ tbody tr:hover td { background: #FAFCFF; }
 @media print {
   .site-header, .site-footer, .a11y-toggle, .to-top, .demo-bar { display: none; }
 }
+
+/* ═════════ Кольори емблеми: чергування тонів ═════════
+   Синій — основа, сонце, вітрило й зелень — по черзі, щоб сторінка була живою,
+   але кожен колір у своїй ролі: фон світлий, значок і цифра — насичені. */
+.is-blue  { --tone: var(--blue);    --tone-t: var(--blue-t);  --tone-g: var(--g-blue); }
+.is-sun   { --tone: var(--sun-d);   --tone-t: var(--sun-t);   --tone-g: var(--g-sun); }
+.is-green { --tone: var(--green-d); --tone-t: var(--green-t); --tone-g: var(--g-green); }
+.is-sail  { --tone: var(--sail);    --tone-t: var(--sail-t);  --tone-g: var(--g-sail); }
+:is(.cards, .stats, .tiles, .numbers, .today, .contact-list, .resp, .team, .shifts, .myths, .clubs) > :nth-child(4n+1) { --tone: var(--blue); --tone-t: var(--blue-t); --tone-g: var(--g-blue); }
+:is(.cards, .stats, .tiles, .numbers, .today, .contact-list, .resp, .team, .shifts, .myths, .clubs) > :nth-child(4n+2) { --tone: var(--sun-d); --tone-t: var(--sun-t); --tone-g: var(--g-sun); }
+:is(.cards, .stats, .tiles, .numbers, .today, .contact-list, .resp, .team, .shifts, .myths, .clubs) > :nth-child(4n+3) { --tone: var(--green-d); --tone-t: var(--green-t); --tone-g: var(--g-green); }
+:is(.cards, .stats, .tiles, .numbers, .today, .contact-list, .resp, .team, .shifts, .myths, .clubs) > :nth-child(4n+4) { --tone: var(--sail); --tone-t: var(--sail-t); --tone-g: var(--g-sail); }
+
+.card .ico { background: var(--tone-t); box-shadow: none; }
+.card .ico::after { background: var(--tone); }
+.stat { background: var(--tone-g); }
+.stat-n { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--tone); }
+.numbers b { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--tone); }
+.tile-link .ico { background: var(--tone-t); }
+.tile-link .ico::after { background: var(--tone); }
+.today .ico { background: var(--tone-t); color: var(--tone); }
+.contact-list .ico, .resp .ico { background: var(--tone-t); }
+.contact-list .ico::after, .resp .ico::after { background: var(--tone); }
+.person .ava { background: var(--tone-g); color: var(--tone); box-shadow: none; }
+.shift { background: var(--tone-g); }
+.shift-row b, .shift-row.is-ctrl b { color: var(--tone); }
+.shift-row.is-ctrl b { color: var(--sail); }
+
+/* виноски чотирьох тонів */
+.callout.is-blue { background: var(--blue-t); }
+.callout.is-blue::before { background: var(--blue); }
+.callout.is-sun { background: var(--sun-t); }
+.callout.is-sun::before { background: var(--sun); }
+.callout.is-sun::after { content: "!"; color: var(--ink); }
+.callout.is-green { background: var(--green-t); }
+.callout.is-green::before { background: var(--green); }
+.callout.is-green::after { content: "✓"; }
+.callout.is-sail { background: var(--sail-t); }
+.callout.is-sail::before { background: var(--sail); }
+.callout.is-sail::after { content: "!"; }
+
+/* рубрики новин — кожна свого кольору */
+.tag.is-ogoloshennia { background: var(--sun-t); color: var(--sun-d); }
+.tag.is-hordist { background: var(--green-t); color: var(--green-d); }
+.tag.is-bezpeka-news { background: var(--sail-t); color: var(--sail); }
+.tag.is-zhyttia { background: var(--soft); color: var(--ink-2); }
+.tag.is-profilna-shkola, .tag.is-navchannia { background: var(--blue-t); color: var(--blue); }
+
+/* міфи і факти, дорожня карта */
+.myth-m span { color: var(--sail); }
+.myth-f span { color: var(--green-d); }
+.rm-stages li.is-past::before { background: var(--green); }
+.rm-stages li.is-now { background: var(--sun-t); box-shadow: inset 0 0 0 2px var(--sun); }
+.rm-stages li.is-now::before { background: var(--sun-d); }
+.rm-m.is-now { background: linear-gradient(160deg, var(--sun-t), #fff 75%); box-shadow: inset 0 0 0 2px var(--sun), var(--sh); }
+.badge { background: var(--sail); color: #fff; }
+.rm-done span { color: var(--green-d); }
+.compare-col.is-next { background: var(--g-green); box-shadow: inset 0 0 0 2px var(--green); }
+.compare-col.is-next .eyebrow { color: var(--green-d); }
+
+/* шапка сторінки: сонце і кольорове вітрило, як в емблемі */
+.page-head { background: linear-gradient(115deg, #EAF3FF 0%, #F6FAFF 55%, #FFF8DC 100%); }
+.page-head::before { content: ""; position: absolute; right: max(-60px, calc((100% - var(--wrap)) / 2 - 140px)); top: -90px; width: clamp(180px, 22vw, 300px); aspect-ratio: 1; border-radius: 50%; background: var(--grad-sun); opacity: .85; }
+.page-head::after { background: none; opacity: 1; -webkit-mask: none; mask: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 140'%3E%3Cpath d='M70 6v100H12S26 48 70 6z' fill='%23E8433A'/%3E%3Cpath d='M76 30v76h38S108 66 76 30z' fill='%23E8433A' fill-opacity='.72'/%3E%3Cpath d='M4 112h112c-12 18-96 18-112 0z' fill='%231C74E8' fill-opacity='.85'/%3E%3C/svg%3E") center / contain no-repeat; }
+@media (prefers-reduced-motion: no-preference) {
+  .page-head::after { animation: sail 7s ease-in-out infinite; }
+  .page-head::before { animation: breathe 8s ease-in-out infinite; }
+}
+@keyframes sail { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-8px) rotate(-2.5deg); } }
+@media (max-width: 640px) {
+  .page-head::after { width: 84px; right: 12px; bottom: -10px; opacity: .9; }
+  .page-head::before { width: 150px; top: -70px; right: -50px; }
+}
+
+.club { position: relative; overflow: hidden; }
+.club::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 5px; background: var(--tone); }
+.club b { color: var(--ink); }
+.clubs > :nth-child(4n+2)::before { background: var(--sun); }

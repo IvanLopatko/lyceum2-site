@@ -95,7 +95,7 @@
     stats: function () { return { type: 'stats', items: [{ n: '', label: '', note: '' }] }; },
     faq: function () { return { type: 'faq', items: [{ q: '', a: '' }] }; },
     table: function () { return { type: 'table', head: ['', ''], rows: [['', '']] }; },
-    callout: function () { return { type: 'callout', tone: 'info', title: '', text: '' }; },
+    callout: function () { return { type: 'callout', tone: 'blue', title: '', text: '' }; },
     buttons: function () { return { type: 'buttons', items: [{ label: '', url: '/' }] }; },
     quote: function () { return { type: 'quote', text: '', cite: '' }; },
     compare: function () { return { type: 'compare', items: [{ label: 'Зараз', title: '', points: [] }, { label: 'Буде', title: '', points: [] }] }; },
@@ -236,7 +236,7 @@
         box.appendChild(field('Рядки: кожен рядок таблиці — з нового рядка, клітинки через | ', area(function () { return (b.rows || []).map(function (r) { return r.join(' | '); }).join('\n'); }, function (v) { b.rows = splitLines(v).map(function (r) { return r.split('|').map(function (s) { return s.trim(); }); }); }, 6), true));
         break;
       case 'callout':
-        box.appendChild(field('Вигляд', select([['info', 'Інформація (блакитний)'], ['note', 'Важливо (жовтий)'], ['alert', 'Тривога, безпека (червоний)']], function () { return b.tone; }, function (v) { b.tone = v; })));
+        box.appendChild(field('Вигляд', select([['blue', 'Інформація (синій)'], ['sun', 'Важливо (сонячний)'], ['green', 'Добре, готово (зелений)'], ['sail', 'Тривога, безпека (червоний)']], function () { return b.tone; }, function (v) { b.tone = v; })));
         box.appendChild(field('Заголовок (необов’язково)', input(function () { return b.title; }, function (v) { b.title = v; })));
         box.appendChild(field('Текст', rich(function () { return b.text; }, function (v) { b.text = v; }), true));
         break;
