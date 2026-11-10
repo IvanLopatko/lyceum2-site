@@ -1,0 +1,388 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "useRootPaddingAwareAlignments": true,
+    "layout": {
+      "contentSize": "1080px",
+      "wideSize": "1240px"
+    },
+    "color": {
+      "defaultPalette": false,
+      "defaultGradients": false,
+      "defaultDuotone": false,
+      "custom": false,
+      "customDuotone": false,
+      "palette": [
+        {
+          "slug": "white",
+          "name": "Білий",
+          "color": "#FFFFFF"
+        },
+        {
+          "slug": "ink",
+          "name": "Чорнило",
+          "color": "#16224A"
+        },
+        {
+          "slug": "ink-2",
+          "name": "Чорнило світліше",
+          "color": "#56618A"
+        },
+        {
+          "slug": "ink-3",
+          "name": "Сіро-блакитний",
+          "color": "#8E97B5"
+        },
+        {
+          "slug": "line",
+          "name": "Лінія",
+          "color": "#E7EBF5"
+        },
+        {
+          "slug": "sky",
+          "name": "Небо бліде",
+          "color": "#F3F8FF"
+        },
+        {
+          "slug": "blue",
+          "name": "Азур",
+          "color": "#1C74E8"
+        },
+        {
+          "slug": "blue-t",
+          "name": "Азур світлий",
+          "color": "#E3EFFF"
+        },
+        {
+          "slug": "sun",
+          "name": "Сонце",
+          "color": "#FFD23F"
+        },
+        {
+          "slug": "sun-t",
+          "name": "Сонце світле",
+          "color": "#FFF5CC"
+        },
+        {
+          "slug": "sun-d",
+          "name": "Сонце темне",
+          "color": "#8A6400"
+        },
+        {
+          "slug": "sail",
+          "name": "Вітрило",
+          "color": "#E8433A"
+        },
+        {
+          "slug": "sail-t",
+          "name": "Вітрило світле",
+          "color": "#FFE4E0"
+        },
+        {
+          "slug": "green",
+          "name": "Зелений",
+          "color": "#1DB866"
+        },
+        {
+          "slug": "green-d",
+          "name": "Зелений темний",
+          "color": "#0E8A4A"
+        },
+        {
+          "slug": "green-t",
+          "name": "Зелений світлий",
+          "color": "#DDF7E8"
+        }
+      ]
+    },
+    "typography": {
+      "defaultFontSizes": false,
+      "customFontSize": false,
+      "fluid": true,
+      "lineHeight": true,
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Заголовки — Unbounded",
+          "fontFamily": "Unbounded, \"Trebuchet MS\", system-ui, sans-serif"
+        },
+        {
+          "slug": "body",
+          "name": "Текст — Onest",
+          "fontFamily": "Onest, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+        },
+        {
+          "slug": "mono",
+          "name": "Моноширинний",
+          "fontFamily": "ui-monospace, \"SF Mono\", Menlo, Consolas, monospace"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "tiny",
+          "name": "Дрібний",
+          "size": "0.75rem",
+          "fluid": false
+        },
+        {
+          "slug": "small",
+          "name": "Малий",
+          "size": "0.875rem",
+          "fluid": false
+        },
+        {
+          "slug": "medium",
+          "name": "Основний",
+          "size": "1rem",
+          "fluid": false
+        },
+        {
+          "slug": "large",
+          "name": "Великий",
+          "size": "1.125rem",
+          "fluid": {
+            "min": "1.0625rem",
+            "max": "1.1875rem"
+          }
+        },
+        {
+          "slug": "h4",
+          "name": "Заголовок 4",
+          "size": "1.25rem",
+          "fluid": {
+            "min": "1.125rem",
+            "max": "1.3125rem"
+          }
+        },
+        {
+          "slug": "h3",
+          "name": "Заголовок 3",
+          "size": "1.5rem",
+          "fluid": {
+            "min": "1.3125rem",
+            "max": "1.625rem"
+          }
+        },
+        {
+          "slug": "h2",
+          "name": "Заголовок 2",
+          "size": "2.125rem",
+          "fluid": {
+            "min": "1.625rem",
+            "max": "2.25rem"
+          }
+        },
+        {
+          "slug": "h1",
+          "name": "Заголовок 1",
+          "size": "3rem",
+          "fluid": {
+            "min": "2rem",
+            "max": "3.25rem"
+          }
+        }
+      ]
+    },
+    "spacing": {
+      "units": [
+        "px",
+        "rem",
+        "%",
+        "vw"
+      ],
+      "spacingSizes": [
+        {
+          "slug": "10",
+          "name": "Дуже мало",
+          "size": "0.5rem"
+        },
+        {
+          "slug": "20",
+          "name": "Мало",
+          "size": "0.875rem"
+        },
+        {
+          "slug": "30",
+          "name": "Середньо",
+          "size": "1.25rem"
+        },
+        {
+          "slug": "40",
+          "name": "Більше",
+          "size": "2rem"
+        },
+        {
+          "slug": "50",
+          "name": "Багато",
+          "size": "3rem"
+        },
+        {
+          "slug": "60",
+          "name": "Секція",
+          "size": "4.5rem"
+        }
+      ]
+    },
+    "border": {
+      "color": true,
+      "radius": true,
+      "style": true,
+      "width": true
+    },
+    "shadow": {
+      "defaultPresets": false,
+      "presets": [
+        {
+          "slug": "soft",
+          "name": "М'яка",
+          "shadow": "0 2px 6px rgba(22,34,74,.05), 0 18px 40px -22px rgba(22,34,74,.26)"
+        },
+        {
+          "slug": "lift",
+          "name": "Підйом",
+          "shadow": "0 4px 10px rgba(22,34,74,.07), 0 30px 60px -28px rgba(22,34,74,.4)"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var(--wp--preset--color--white)",
+      "text": "var(--wp--preset--color--ink)"
+    },
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--body)",
+      "fontSize": "var(--wp--preset--font-size--medium)",
+      "lineHeight": "1.62"
+    },
+    "spacing": {
+      "padding": {
+        "left": "20px",
+        "right": "20px"
+      },
+      "blockGap": "1.25rem"
+    },
+    "elements": {
+      "link": {
+        "color": {
+          "text": "var(--wp--preset--color--blue)"
+        },
+        "typography": {
+          "textDecoration": "underline"
+        },
+        ":hover": {
+          "typography": {
+            "textDecoration": "none"
+          }
+        }
+      },
+      "heading": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--display)",
+          "fontWeight": "800",
+          "lineHeight": "1.15",
+          "letterSpacing": "-0.03em"
+        }
+      },
+      "h1": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--h1)",
+          "lineHeight": "1.05"
+        }
+      },
+      "h2": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--h2)"
+        }
+      },
+      "h3": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--h3)"
+        }
+      },
+      "h4": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--h4)",
+          "fontWeight": "700"
+        }
+      },
+      "button": {
+        "color": {
+          "background": "var(--wp--preset--color--blue)",
+          "text": "var(--wp--preset--color--white)"
+        },
+        "typography": {
+          "fontWeight": "700",
+          "fontSize": "var(--wp--preset--font-size--medium)"
+        },
+        "border": {
+          "radius": "999px"
+        },
+        "spacing": {
+          "padding": {
+            "top": "14px",
+            "bottom": "14px",
+            "left": "24px",
+            "right": "24px"
+          }
+        },
+        ":hover": {
+          "color": {
+            "background": "var(--wp--preset--color--ink)"
+          }
+        }
+      }
+    },
+    "blocks": {
+      "core/separator": {
+        "color": {
+          "text": "var(--wp--preset--color--line)"
+        }
+      },
+      "core/quote": {
+        "color": {
+          "background": "var(--wp--preset--color--sky)"
+        },
+        "border": {
+          "radius": "18px"
+        },
+        "spacing": {
+          "padding": {
+            "top": "1.25rem",
+            "bottom": "1.25rem",
+            "left": "1.5rem",
+            "right": "1.5rem"
+          }
+        }
+      },
+      "core/table": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--small)"
+        }
+      }
+    }
+  },
+  "customTemplates": [
+    {
+      "name": "page-wide",
+      "title": "Сторінка на всю ширину",
+      "postTypes": [
+        "page"
+      ]
+    }
+  ],
+  "templateParts": [
+    {
+      "area": "header",
+      "name": "header",
+      "title": "Шапка"
+    },
+    {
+      "area": "footer",
+      "name": "footer",
+      "title": "Підвал"
+    }
+  ]
+}

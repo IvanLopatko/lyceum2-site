@@ -1,0 +1,195 @@
+<!-- wp:template-part {"slug":"header","tagName":"div","className":"vit-site-header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"vit-front","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|60"},"blockGap":"var:preset|spacing|60"}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group vit-front" id="vit-main" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60)">
+
+<!-- wp:columns {"verticalAlignment":"center","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|50"}}}} -->
+<div class="wp-block-columns are-vertically-aligned-center"><!-- wp:column {"verticalAlignment":"center","width":"54%"} -->
+<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:54%"><!-- wp:paragraph {"textColor":"sail","fontSize":"small","style":{"typography":{"fontWeight":"700","textTransform":"uppercase","letterSpacing":"0.14em"}}} -->
+<p class="has-sail-color has-text-color has-small-font-size" style="font-weight:700;letter-spacing:0.14em;text-transform:uppercase">Біляївка · Одеський район · з 1897 року</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2.3rem, 5.4vw, 4rem)","lineHeight":"1.02"}}} -->
+<h1 class="wp-block-heading" style="font-size:clamp(2.3rem, 5.4vw, 4rem);line-height:1.02">Школа, яку впізнають за <span class="vit-hl">вітрилами</span></h1>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"textColor":"ink-2","fontSize":"large"} -->
+<p class="has-ink-2-color has-text-color has-large-font-size">Комунальний ліцей з інклюзивним навчанням, трьома корпусами і 129 роками історії. Тут вчаться думати, дружити й не боятися ставити питання.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/batkam-i-uchniam/vstup/">Вступ до ліцею</a></div>
+<!-- /wp:button -->
+
+<!-- wp:button {"className":"is-style-outline"} -->
+<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="/navchannia/rozklad/">Розклад і дзвінки</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
+
+<!-- wp:html -->
+[vit_hero_chips]
+<!-- /wp:html --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"center"} -->
+<div class="wp-block-column is-vertically-aligned-center"><!-- wp:html -->
+<div class="vit-hero-panel">
+  <span class="sun" aria-hidden="true"></span>
+  <svg class="wave" viewBox="0 0 1200 62" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 34 C150 6 300 62 450 34 S750 6 900 34 S1100 62 1200 34 V62 H0z" fill="#BFDBFF" opacity=".7"/>
+    <path d="M0 46 C200 24 350 66 550 46 S850 24 1000 46 S1150 64 1200 50 V62 H0z" fill="#8FC0FF" opacity=".55"/>
+  </svg>
+  <div style="position:relative;display:grid;justify-items:center">
+    <img src="/wp-content/uploads/vitryla/emblema.png" alt="Емблема Біляївського ліцею №2: червоні вітрила на синій воді під жовтим сонцем" width="200" height="200">
+    <span class="motto">«Вітрила юності»</span>
+  </div>
+</div>
+<!-- /wp:html --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+
+<!-- wp:html -->
+[vit_today]
+<!-- /wp:html -->
+
+<!-- wp:html -->
+[vit_profile_promo]
+<!-- /wp:html -->
+
+<!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:group {"className":"vit-sec-head","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap","verticalAlignment":"bottom"}} -->
+<div class="wp-block-group vit-sec-head"><!-- wp:heading -->
+<h2 class="wp-block-heading">Новини ліцею</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph {"className":"vit-more"} -->
+<p class="vit-more"><a href="/novyny/">Усі новини</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"22px"}}}} -->
+<div class="wp-block-columns"><!-- wp:column {"width":"56%"} -->
+<div class="wp-block-column" style="flex-basis:56%"><!-- wp:query {"queryId":11,"query":{"perPage":1,"postType":"post","order":"desc","orderBy":"date","offset":0,"inherit":false},"className":"vit-news-lead"} -->
+<div class="wp-block-query vit-news-lead"><!-- wp:post-template -->
+<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"16/9"} /-->
+<!-- wp:post-terms {"term":"category"} /-->
+<!-- wp:post-title {"isLink":true,"level":3,"fontSize":"h3"} /-->
+<!-- wp:post-excerpt {"excerptLength":28} /-->
+<!-- wp:post-date {"fontSize":"small","textColor":"ink-3"} /-->
+<!-- /wp:post-template -->
+<!-- wp:query-no-results -->
+<!-- wp:paragraph -->
+<p>Новин поки немає.</p>
+<!-- /wp:paragraph -->
+<!-- /wp:query-no-results --></div>
+<!-- /wp:query --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:query {"queryId":12,"query":{"perPage":4,"postType":"post","order":"desc","orderBy":"date","offset":1,"inherit":false},"className":"vit-news-list"} -->
+<div class="wp-block-query vit-news-list"><!-- wp:post-template -->
+<!-- wp:post-terms {"term":"category"} /-->
+<!-- wp:post-title {"isLink":true,"level":3,"fontSize":"large"} /-->
+<!-- wp:post-date {"fontSize":"small","textColor":"ink-3"} /-->
+<!-- /wp:post-template --></div>
+<!-- /wp:query --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:heading -->
+<h2 class="wp-block-heading">Швидко знайти</h2>
+<!-- /wp:heading -->
+
+<!-- wp:html -->
+<div class="vit-bento">
+  <a class="tile is-wide" href="/navchannia/rozklad/"><b>Розклад уроків і дзвінків</b><span>Уроки по класах, дзвінки, структура навчального року, кабінети</span></a>
+  <a class="tile is-sun" href="/batkam-i-uchniam/vstup/"><b>Вступ до ліцею</b><span>Документи, правила прийому, територія</span></a>
+  <a class="tile is-sail" href="/batkam-i-uchniam/harchuvannia/"><b>Харчування</b><span>Меню, режим, пільги</span></a>
+  <a class="tile is-green" href="/pidtrymka-i-bezpeka/inkliuzyvne-navchannia/"><b>Інклюзивне навчання</b><span>Програма розвитку, команда супроводу</span></a>
+  <a class="tile" href="/pidtrymka-i-bezpeka/psyhologichna-sluzhba/"><b>Психологічна служба</b><span>Підтримка учнів і батьків</span></a>
+  <a class="tile" href="/pidtrymka-i-bezpeka/bezpeka-i-ukryttia/"><b>Безпека і укриття</b><span>Дії під час тривоги</span></a>
+</div>
+<!-- /wp:html --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:heading -->
+<h2 class="wp-block-heading">Ліцей у цифрах</h2>
+<!-- /wp:heading -->
+
+<!-- wp:html -->
+[vit_numbers]
+<!-- /wp:html --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:group {"className":"vit-sec-head","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap","verticalAlignment":"bottom"}} -->
+<div class="wp-block-group vit-sec-head"><!-- wp:heading -->
+<h2 class="wp-block-heading">Наша команда</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph {"className":"vit-more"} -->
+<p class="vit-more"><a href="/kadrovyj-sklad/">Увесь склад</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:html -->
+[vit_team group="administratsiya" limit="4"]
+<!-- /wp:html --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:group {"className":"vit-sec-head","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap","verticalAlignment":"bottom"}} -->
+<div class="wp-block-group vit-sec-head"><!-- wp:heading -->
+<h2 class="wp-block-heading">Гуртки і клуби</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph {"className":"vit-more"} -->
+<p class="vit-more"><a href="/gurtky/">Усі гуртки</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:html -->
+[vit_club_list limit="4"]
+<!-- /wp:html --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"layout":{"type":"default"}} -->
+<div class="wp-block-group"><!-- wp:group {"className":"vit-sec-head","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap","verticalAlignment":"bottom"}} -->
+<div class="wp-block-group vit-sec-head"><!-- wp:heading -->
+<h2 class="wp-block-heading">Прозорість і документи</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph {"className":"vit-more"} -->
+<p class="vit-more"><a href="/dokumenty/">Усі документи</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:html -->
+[vit_documents limit="6"]
+<!-- /wp:html --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"vit-cta","layout":{"type":"default"}} -->
+<div class="wp-block-group vit-cta"><!-- wp:heading -->
+<h2 class="wp-block-heading">Маєте питання?</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Напишіть або зателефонуйте до приймальні. Якщо потрібен офіційний документ — подайте запит на публічну інформацію, ми зобовʼязані відповісти протягом пʼяти робочих днів.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/kontakty/">Контакти</a></div>
+<!-- /wp:button -->
+
+<!-- wp:button {"className":"is-style-outline"} -->
+<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="/publichna-informacia/">Подати запит</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"div","className":"vit-footer"} /-->

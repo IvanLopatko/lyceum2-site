@@ -1,0 +1,14 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "preferredVersions": { "php": "8.3", "wp": "latest" },
+  "landingPage": "/",
+  "siteOptions": {
+    "blogname": "Біляївський ліцей №2",
+    "blogdescription": "Вітрила юності",
+    "timezone_string": "Europe/Kyiv"
+  },
+  "steps": [
+    { "step": "setSiteLanguage", "language": "uk" },
+    { "step": "activateTheme", "themeFolderName": "vitryla" }
+  ]
+}

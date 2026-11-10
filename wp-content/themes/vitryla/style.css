@@ -1,0 +1,384 @@
+/*
+Theme Name: Вітрила юності
+Theme URI: https://school2bel.ukr.education
+Description: Тема сайту Біляївського ліцею №2. Дизайн-система побудована на кольорах і девізі емблеми закладу: червоні вітрила, жовте сонце, зелене поле, синя вода.
+Author: Біляївський ліцей №2
+Version: 0.1.0
+Requires at least: 6.6
+Tested up to: 6.8
+Requires PHP: 8.1
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: vitryla
+Tags: education, block-theme, accessibility-ready, full-site-editing
+*/
+
+/* ═══════════════════════════════════════════════════════════
+   КАСКАД «ВІТРИЛА ЮНОСТІ»
+   Кольори, розміри й шрифти живуть у theme.json — звідти вони
+   стають змінними --wp--preset--*. Тут лише те, чого theme.json
+   не вміє: власні компоненти й дрібна поведінка.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* короткі псевдоніми, щоб не писати --wp--preset--color-- щоразу */
+  --c-white:   var(--wp--preset--color--white);
+  --c-ink:     var(--wp--preset--color--ink);
+  --c-ink-2:   var(--wp--preset--color--ink-2);
+  --c-ink-3:   var(--wp--preset--color--ink-3);
+  --c-line:    var(--wp--preset--color--line);
+  --c-sky:     var(--wp--preset--color--sky);
+  --c-blue:    var(--wp--preset--color--blue);
+  --c-blue-t:  var(--wp--preset--color--blue-t);
+  --c-sun:     var(--wp--preset--color--sun);
+  --c-sun-t:   var(--wp--preset--color--sun-t);
+  --c-sun-d:   var(--wp--preset--color--sun-d);
+  --c-sail:    var(--wp--preset--color--sail);
+  --c-sail-t:  var(--wp--preset--color--sail-t);
+  --c-green:   var(--wp--preset--color--green);
+  --c-green-d: var(--wp--preset--color--green-d);
+  --c-green-t: var(--wp--preset--color--green-t);
+
+  --r-lg: 26px;
+  --r-md: 16px;
+  --r-sm: 10px;
+  --r-pill: 999px;
+
+  --sh-soft: var(--wp--preset--shadow--soft);
+  --sh-lift: var(--wp--preset--shadow--lift);
+
+  /* множник розміру шрифту — ним керує панель доступності */
+  --a11y-scale: 1;
+  --a11y-leading: 1.62;
+}
+
+html { font-size: calc(100% * var(--a11y-scale)); }
+body { line-height: var(--a11y-leading); -webkit-font-smoothing: antialiased; }
+
+/* Режим високого контрасту з панелі доступності */
+body.a11y-contrast {
+  --c-ink-2: #2A3560;
+  --c-ink-3: #3C4873;
+  --c-line:  #9AA4C4;
+  --c-sky:   #FFFFFF;
+}
+body.a11y-contrast a { text-decoration: underline; }
+
+/* ── доступність: базові речі, які мають бути завжди ────── */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--c-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 999;
+  background: var(--c-ink); color: #fff; padding: 12px 20px;
+  border-radius: 0 0 var(--r-sm) 0; font-weight: 700; text-decoration: none;
+}
+.skip-link:focus { left: 0; }
+.screen-reader-text {
+  position: absolute !important; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ── назва закладу в шапці ───────────────────────────────── */
+.wp-block-site-title,
+.wp-block-site-title a {
+  font-family: var(--wp--preset--font-family--display);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+  text-decoration: none;
+  color: var(--c-ink);
+}
+.wp-block-site-title a:hover { color: var(--c-blue); }
+
+/* ── смужка кольорів емблеми ─────────────────────────────── */
+.vit-stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 6px; }
+.vit-stripe i:nth-child(1) { background: var(--c-green); }
+.vit-stripe i:nth-child(2) { background: var(--c-sun); }
+.vit-stripe i:nth-child(3) { background: var(--c-sail); }
+.vit-stripe i:nth-child(4) { background: var(--c-blue); }
+
+/* ── службовий рядок над меню ────────────────────────────── */
+.vit-utility {
+  background: var(--c-sky);
+  border-bottom: 1px solid var(--c-line);
+  font-size: .875rem;
+}
+.vit-utility .inner {
+  display: flex; gap: 6px 18px; flex-wrap: wrap; align-items: center;
+  padding-block: 8px;
+}
+.vit-utility a { color: var(--c-ink-2); text-decoration: none; font-weight: 500; }
+.vit-utility a:hover { color: var(--c-blue); text-decoration: underline; }
+
+/* ── смуга «Сьогодні в ліцеї» ────────────────────────────── */
+.vit-today { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.vit-today .cell {
+  border-radius: var(--r-md); padding: 20px 22px;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.vit-today .cell .ic {
+  width: 44px; height: 44px; border-radius: 14px; flex: none;
+  display: grid; place-items: center; background: var(--c-white);
+}
+.vit-today .cell > span:last-child { min-width: 0; }
+.vit-today .k { display: block; font-size: .75rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--c-ink-2); opacity: .85; }
+.vit-today .v { display: block; font-size: 1rem; font-weight: 700; line-height: 1.3; margin-top: 5px; }
+.vit-today .v small { display: block; font-weight: 400; font-size: .8125rem; color: var(--c-ink-2); margin-top: 4px; }
+.vit-today .is-blue  { background: var(--c-blue-t); }  .vit-today .is-blue .ic  { color: var(--c-blue); }
+.vit-today .is-sail  { background: var(--c-sail-t); }  .vit-today .is-sail .ic  { color: var(--c-sail); }
+.vit-today .is-green { background: var(--c-green-t); } .vit-today .is-green .ic { color: var(--c-green-d); }
+.vit-today .is-sun   { background: var(--c-sun-t); }   .vit-today .is-sun .ic   { color: var(--c-sun-d); }
+@media (max-width: 900px) { .vit-today { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .vit-today { grid-template-columns: 1fr; } }
+
+/* ── реєстр документів (стаття 30) ───────────────────────── */
+.vit-docs { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.vit-doc {
+  display: flex; flex-direction: column; gap: 10px;
+  border: 1.5px solid var(--c-line); border-radius: var(--r-md);
+  padding: 18px 20px; background: var(--c-white); text-decoration: none; color: inherit;
+}
+.vit-doc:hover { border-color: var(--c-blue); }
+.vit-doc .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--c-blue-t); color: var(--c-blue); }
+.vit-doc .ttl { font-size: .9375rem; font-weight: 700; line-height: 1.3; margin-top: auto; }
+.vit-doc .meta { font-size: .75rem; font-weight: 600; color: var(--c-ink-3); display: flex; align-items: center; gap: 6px; }
+.vit-doc .meta::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.vit-doc .meta.is-fresh { color: var(--c-green-d); }
+.vit-doc .meta.is-stale { color: var(--c-sail); }
+.vit-doc .meta.is-due   { color: var(--c-sun-d); }
+
+/* попередження в адмінці, коли спливає 10-денний строк */
+.vit-overdue {
+  background: var(--c-sail-t); border-left: 4px solid var(--c-sail);
+  padding: 12px 16px; border-radius: var(--r-sm); font-size: .875rem;
+}
+
+/* ── сітка педагогів ─────────────────────────────────────── */
+.vit-staff { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.vit-staff .p { text-align: center; }
+.vit-staff .p img {
+  width: 100%; aspect-ratio: 3/4; object-fit: cover;
+  border-radius: var(--r-md); display: block; background: var(--c-sky);
+}
+.vit-staff .p b { display: block; font-size: .9375rem; font-weight: 700; margin-top: 10px; line-height: 1.3; }
+.vit-staff .p span { display: block; font-size: .8125rem; color: var(--c-ink-2); margin-top: 3px; }
+
+/* ── картки новин ────────────────────────────────────────── */
+.vit-news { display: grid; gap: 20px; grid-template-columns: 1.3fr 1fr; }
+.vit-news .lead { border: 1px solid var(--c-line); border-radius: var(--r-lg); overflow: hidden; background: var(--c-white); }
+.vit-news .lead img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.vit-news .lead .tx { padding: 22px 24px 24px; }
+.vit-news .feed { display: flex; flex-direction: column; gap: 12px; }
+.vit-news .item {
+  display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: start;
+  border: 1px solid var(--c-line); border-radius: var(--r-md); padding: 15px;
+  background: var(--c-white); text-decoration: none; color: inherit;
+}
+.vit-news .day {
+  border-radius: 14px; aspect-ratio: 1; display: grid; place-content: center;
+  text-align: center; line-height: 1; background: var(--c-blue-t); color: var(--c-blue);
+}
+.vit-news .day b { font-family: var(--wp--preset--font-family--display); font-size: 1.25rem; display: block; }
+.vit-news .day span { font-size: .6875rem; font-weight: 600; display: block; margin-top: 4px; }
+@media (max-width: 900px) { .vit-news { grid-template-columns: 1fr; } }
+
+/* рубрики новин — колір за таксономією */
+.vit-tag {
+  display: inline-block; font-size: .75rem; font-weight: 700;
+  padding: 5px 12px; border-radius: var(--r-pill); margin-bottom: 10px;
+}
+.vit-tag.is-ogoloshennia { background: var(--c-blue-t);  color: var(--c-blue); }
+.vit-tag.is-hordist      { background: var(--c-sun);     color: var(--c-ink); }
+.vit-tag.is-navchannia   { background: var(--c-green-t); color: var(--c-green-d); }
+.vit-tag.is-bezpeka      { background: var(--c-sail-t);  color: var(--c-sail); }
+.vit-tag.is-zhyttia      { background: var(--c-sky);     color: var(--c-ink-2); }
+
+/* ── плитки «Швидко знайти» (бенто) ──────────────────────── */
+.vit-bento { display: grid; gap: 14px; grid-template-columns: repeat(4, 1fr); }
+.vit-bento .tile {
+  border-radius: var(--r-lg); padding: 24px; min-height: 170px;
+  display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: inherit;
+  background: var(--c-sky);
+}
+.vit-bento .tile b { font-size: 1.125rem; font-weight: 700; margin-top: auto; line-height: 1.2; }
+.vit-bento .tile span { font-size: .875rem; color: var(--c-ink-2); }
+.vit-bento .tile.is-wide { grid-column: span 2; grid-row: span 2; background: var(--c-blue); color: #fff; }
+.vit-bento .tile.is-wide span { color: rgba(255,255,255,.88); }
+.vit-bento .tile.is-sun { background: var(--c-sun); }
+.vit-bento .tile.is-sail { background: var(--c-sail-t); }
+.vit-bento .tile.is-green { background: var(--c-green-t); }
+@media (max-width: 960px) { .vit-bento { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .vit-bento { grid-template-columns: 1fr; } .vit-bento .tile.is-wide { grid-column: span 1; grid-row: span 1; } }
+
+/* ── панель доступності ──────────────────────────────────── */
+.vit-a11y-toggle {
+  position: fixed; right: 16px; bottom: 16px; z-index: 90;
+  width: 52px; height: 52px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--c-ink); color: #fff; box-shadow: var(--sh-lift);
+  display: grid; place-items: center;
+}
+.vit-a11y-panel {
+  position: fixed; right: 16px; bottom: 80px; z-index: 90;
+  width: min(300px, calc(100vw - 32px));
+  background: var(--c-white); border: 1.5px solid var(--c-line);
+  border-radius: var(--r-md); box-shadow: var(--sh-lift); padding: 18px;
+}
+.vit-a11y-panel[hidden] { display: none; }
+.vit-a11y-panel h2 { font-size: 1rem; margin: 0 0 12px; }
+.vit-a11y-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.vit-a11y-row button {
+  flex: 1; font: inherit; font-size: .875rem; font-weight: 600; cursor: pointer;
+  border: 1.5px solid var(--c-line); background: var(--c-white); color: var(--c-ink-2);
+  padding: 9px 6px; border-radius: var(--r-sm);
+}
+.vit-a11y-row button[aria-pressed="true"] { background: var(--c-ink); color: #fff; border-color: var(--c-ink); }
+.vit-a11y-panel .reset { width: 100%; font-size: .8125rem; color: var(--c-ink-3); background: none; border: 0; cursor: pointer; padding-top: 4px; }
+
+/* ── друк ────────────────────────────────────────────────── */
+@media print {
+  .vit-utility, .vit-a11y-toggle, .vit-a11y-panel, .wp-block-navigation { display: none !important; }
+  body { font-size: 11pt; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
+}
+
+/* ── карта сайту ─────────────────────────────────────────── */
+.vit-sitemap { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.vit-sitemap .sec h2 { font-size: 1.0625rem; margin: 0 0 8px; }
+.vit-sitemap .sec h2 a { text-decoration: none; color: var(--c-ink); }
+.vit-sitemap .sec h2 a:hover { color: var(--c-blue); }
+.vit-sitemap ul { margin: 0; padding-left: 18px; }
+.vit-sitemap li { font-size: .9375rem; padding: 2px 0; }
+.vit-sitemap li a { color: var(--c-ink-2); text-decoration: none; }
+.vit-sitemap li a:hover { color: var(--c-blue); text-decoration: underline; }
+
+/* підказка «що тут має бути» — прибрати, коли сторінку наповнено */
+.vit-brief { background: var(--c-sun-t); border-radius: var(--r-sm); padding: 12px 16px; }
+.vit-empty { color: var(--c-ink-3); font-style: italic; }
+
+/* ── картка документа / гуртка ───────────────────────────── */
+.vit-card {
+  background: var(--c-sky); border-radius: var(--r-md);
+  padding: 20px 24px; margin-block: 18px 26px;
+}
+.vit-card dl { margin: 0; display: grid; gap: 10px 26px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.vit-card dl > div { min-width: 0; }
+.vit-card dt { font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--c-ink-3); }
+.vit-card dd { margin: 3px 0 0; font-size: .9375rem; font-weight: 600; }
+.vit-card .vit-state.is-fresh { color: var(--c-green-d); }
+.vit-card .vit-state.is-due   { color: var(--c-sun-d); }
+.vit-card .vit-state.is-stale { color: var(--c-sail); }
+.vit-dl {
+  display: inline-flex; align-items: baseline; gap: 10px; margin-top: 18px;
+  background: var(--c-blue); color: #fff; text-decoration: none;
+  padding: 13px 22px; border-radius: var(--r-pill); font-weight: 700; font-size: .9375rem;
+}
+.vit-dl:hover { background: var(--c-ink); }
+.vit-dl span { font-weight: 400; font-size: .8125rem; opacity: .8; }
+
+/* ── смуга попередження про демо-наповнення ──────────────── */
+.vit-demo-bar {
+  background: var(--c-sun); color: var(--c-ink);
+  font-size: .8125rem; font-weight: 600; text-align: center;
+  padding: 9px 20px;
+}
+
+/* ═══════════ Полірування ═══════════ */
+
+/* ── геро ── */
+.vit-hero-panel {
+  position: relative; overflow: hidden; border-radius: var(--r-lg);
+  background: linear-gradient(135deg, #DDECFF 0%, #EAF4FF 40%, #FFF3CE 100%);
+  min-height: 300px; display: grid; place-items: center; padding: 40px 28px;
+}
+.vit-hero-panel .sun {
+  position: absolute; width: 190px; height: 190px; border-radius: 50%;
+  background: var(--c-sun); right: -52px; top: -58px; opacity: .85;
+}
+.vit-hero-panel .wave { position: absolute; left: 0; right: 0; bottom: -2px; height: 62px; }
+.vit-hero-panel img { position: relative; width: 190px; height: auto; filter: drop-shadow(0 18px 30px rgba(22,34,74,.22)); }
+.vit-hero-panel .motto {
+  position: relative; margin-top: 16px; text-align: center;
+  font-family: var(--wp--preset--font-family--display); font-weight: 700;
+  font-size: 1.0625rem; letter-spacing: -.02em; color: var(--c-ink);
+}
+@media (max-width: 782px) { .vit-hero-panel { min-height: 230px; } .vit-hero-panel img { width: 140px; } }
+
+/* ── новини на головній і в архіві ── */
+.wp-block-post-template.is-layout-grid { gap: 26px 22px; }
+.wp-block-post-template li > .wp-block-post-featured-image img { border-radius: var(--r-md); }
+.wp-block-post-title a { text-decoration: none; }
+.wp-block-post-title a:hover { color: var(--c-blue); }
+.wp-block-post-date { font-variant-numeric: tabular-nums; }
+
+/* рубрики новин — кольорові позначки */
+.wp-block-post-terms a {
+  display: inline-block; text-decoration: none; font-size: .75rem; font-weight: 700;
+  background: var(--c-blue-t); color: var(--c-blue);
+  padding: 4px 11px; border-radius: var(--r-pill); margin-right: 5px;
+}
+.wp-block-post-terms a:hover { background: var(--c-blue); color: #fff; }
+
+/* ── кнопки ── */
+.wp-block-button__link { transition: background-color .18s, color .18s, border-color .18s; }
+.wp-block-button.is-style-outline .wp-block-button__link {
+  border: 1.5px solid var(--c-line); color: var(--c-ink); background: transparent;
+}
+.wp-block-button.is-style-outline .wp-block-button__link:hover { border-color: var(--c-blue); color: var(--c-blue); }
+
+/* ── меню ── */
+.wp-block-navigation .wp-block-navigation-item__content {
+  text-decoration: none; font-weight: 500; color: var(--c-ink-2);
+  padding: 8px 13px; border-radius: var(--r-pill);
+}
+.wp-block-navigation .wp-block-navigation-item__content:hover { background: var(--c-blue-t); color: var(--c-blue); }
+.wp-block-navigation .current-menu-item .wp-block-navigation-item__content { background: var(--c-ink); color: #fff; }
+
+/* ── шапка ── */
+.wp-block-site-logo img { border-radius: 10px; }
+
+/* ── заголовки секцій на головній ── */
+.vit-main > .wp-block-group > h2,
+.vit-main > h2 { margin-bottom: .6em; }
+
+/* ── підвал ── */
+.wp-block-site-title a { color: inherit; }
+footer .wp-block-separator { opacity: .25; }
+
+/* ── сітка педагогів: рівні картки ── */
+.vit-staff .p { background: var(--c-white); border: 1px solid var(--c-line); border-radius: var(--r-md); padding: 12px; }
+.vit-staff .p img { border-radius: var(--r-sm); margin-bottom: 4px; }
+.vit-staff .p b { font-size: .875rem; }
+.vit-staff .p span { font-size: .75rem; }
+
+/* ── гуртки й документи: вирівняні картки ── */
+.vit-doc .ttl { min-height: 2.6em; }
+
+/* ── цифри ── */
+.vit-numbers .tile { min-height: 0; padding: 22px 24px; gap: 2px; text-align: left; }
+.vit-numbers .tile b { font-family: var(--wp--preset--font-family--display); letter-spacing: -.04em; line-height: 1; }
+.vit-numbers .tile:nth-child(1) b { color: var(--c-sail); }
+.vit-numbers .tile:nth-child(2) b { color: var(--c-blue); }
+.vit-numbers .tile:nth-child(3) b { color: var(--c-green-d); }
+.vit-numbers .tile:nth-child(4) b { color: var(--c-sun-d); }
+
+/* ── бенто: трохи повітря ── */
+.vit-bento .tile b { letter-spacing: -.02em; }
+.vit-bento .tile.is-wide b { font-family: var(--wp--preset--font-family--display); }
+
+/* ── аватар з ініціалів, коли фото немає ─────────────────── */
+.vit-ava {
+  display: grid; place-items: center; width: 100%; aspect-ratio: 3/4;
+  border-radius: var(--r-sm); margin-bottom: 4px;
+  font-family: var(--wp--preset--font-family--display);
+  font-weight: 700; font-size: 1.75rem; letter-spacing: -.03em;
+}
+.vit-ava.is-blue  { background: var(--c-blue-t);  color: var(--c-blue); }
+.vit-ava.is-sun   { background: var(--c-sun-t);   color: var(--c-sun-d); }
+.vit-ava.is-sail  { background: var(--c-sail-t);  color: var(--c-sail); }
+.vit-ava.is-green { background: var(--c-green-t); color: var(--c-green-d); }
