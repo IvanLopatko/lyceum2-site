@@ -1,0 +1,41 @@
+{
+ "slug": "zhyttia-litseiu",
+ "parent": "",
+ "title": "Життя ліцею",
+ "lead": "Те, заради чого ліцей — це не лише уроки: досягнення, традиції, самоврядування, гуртки.",
+ "order": 6,
+ "template": true,
+ "updated": "2026-10-30",
+ "blocks": [
+  {
+   "type": "component",
+   "name": "children",
+   "args": {}
+  },
+  {
+   "type": "h",
+   "level": 2,
+   "text": "Гуртки і клуби"
+  },
+  {
+   "type": "component",
+   "name": "club_list",
+   "args": {
+    "limit": "4"
+   }
+  },
+  {
+   "type": "buttons",
+   "items": [
+    {
+     "label": "Усі новини",
+     "url": "/novyny/"
+    },
+    {
+     "label": "Усі гуртки",
+     "url": "/gurtky/"
+    }
+   ]
+  }
+ ]
+}

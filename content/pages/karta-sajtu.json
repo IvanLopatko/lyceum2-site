@@ -1,0 +1,20 @@
+{
+ "slug": "karta-sajtu",
+ "parent": "",
+ "title": "Карта сайту",
+ "lead": "Усі розділи й сторінки сайту на одній сторінці.",
+ "order": 0,
+ "template": false,
+ "updated": "2026-10-30",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "Усі розділи й сторінки сайту на одній сторінці."
+  },
+  {
+   "type": "component",
+   "name": "sitemap",
+   "args": {}
+  }
+ ]
+}

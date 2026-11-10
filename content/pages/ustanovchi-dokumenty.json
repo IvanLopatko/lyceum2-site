@@ -1,0 +1,22 @@
+{
+ "slug": "ustanovchi-dokumenty",
+ "parent": "pro-licej",
+ "title": "Установчі документи",
+ "lead": "Статут, ліцензія та реєстраційні документи ліцею.",
+ "order": 3,
+ "template": true,
+ "updated": "2026-10-30",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "Документи, на підставі яких працює заклад. Натисніть на документ, щоб відкрити його."
+  },
+  {
+   "type": "component",
+   "name": "documents",
+   "args": {
+    "section": "ustanovchi"
+   }
+  }
+ ]
+}

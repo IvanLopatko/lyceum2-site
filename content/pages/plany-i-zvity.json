@@ -1,0 +1,18 @@
+{
+ "slug": "plany-i-zvity",
+ "parent": "prozorist",
+ "title": "Плани і звіти",
+ "lead": "Річний звіт директора та план роботи ліцею.",
+ "order": 2,
+ "template": true,
+ "updated": "2026-10-30",
+ "blocks": [
+  {
+   "type": "component",
+   "name": "documents",
+   "args": {
+    "section": "zvity"
+   }
+  }
+ ]
+}

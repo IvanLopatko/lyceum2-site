@@ -1,15 +1,11 @@
-# База даних і журнал локального WordPress — не публікуємо
-wp-content/database/
-wp-content/debug.log
-# Стандартні теми, плагіни й переклади WordPress — ставляться самі
-wp-content/themes/*
-!wp-content/themes/vitryla/
-wp-content/plugins/
-wp-content/languages/
-wp-content/fonts/
-wp-content/upgrade/
-# Фото й документи вже лежать у docs/ (копія сайту)
-wp-content/uploads/
-# Сирі дані з Facebook (тимчасові підписані посилання)
-tools/fb-raw-*.json
+# Облікові записи, коди й журнали входу — лише на сервері
+config/*
+!config/.htaccess
+!config/README.md
+# Історія правок з адмінки (на сервері)
+content/.history/
+*.lock
+*.tmp*
 .DS_Store
+# Сирі дані з Facebook
+tools/fb-raw-*.json

@@ -1,0 +1,112 @@
+{
+ "news": [
+  {
+   "slug": "ogoloshennia",
+   "name": "Оголошення"
+  },
+  {
+   "slug": "hordist",
+   "name": "Наша гордість"
+  },
+  {
+   "slug": "navchannia",
+   "name": "Навчання"
+  },
+  {
+   "slug": "bezpeka-news",
+   "name": "Безпека"
+  },
+  {
+   "slug": "zhyttia",
+   "name": "Життя ліцею"
+  },
+  {
+   "slug": "profilna-shkola",
+   "name": "Профільна школа"
+  }
+ ],
+ "documents": [
+  {
+   "slug": "ustanovchi",
+   "name": "Установчі документи"
+  },
+  {
+   "slug": "osvitni",
+   "name": "Освітні програми"
+  },
+  {
+   "slug": "finansy",
+   "name": "Фінансові документи"
+  },
+  {
+   "slug": "blagodijna",
+   "name": "Благодійна допомога та закупівлі"
+  },
+  {
+   "slug": "zvity",
+   "name": "Плани і звіти"
+  },
+  {
+   "slug": "strategiya",
+   "name": "Стратегія і самооцінювання"
+  },
+  {
+   "slug": "kadry",
+   "name": "Кадри й атестація"
+  },
+  {
+   "slug": "pryjom",
+   "name": "Прийом і територія обслуговування"
+  },
+  {
+   "slug": "bulinh",
+   "name": "Протидія булінгу"
+  },
+  {
+   "slug": "bezpeka",
+   "name": "Безпека і доступ"
+  },
+  {
+   "slug": "dostupnist",
+   "name": "Доступність для осіб з ООП"
+  },
+  {
+   "slug": "monitorynh",
+   "name": "Моніторинг якості освіти"
+  },
+  {
+   "slug": "koruptsiya",
+   "name": "Запобігання корупції"
+  },
+  {
+   "slug": "normatyvna",
+   "name": "Нормативно-правова база"
+  },
+  {
+   "slug": "profilna",
+   "name": "Старша профільна школа"
+  }
+ ],
+ "staff": [
+  {
+   "slug": "administratsiya",
+   "name": "Адміністрація"
+  },
+  {
+   "slug": "vchyteli",
+   "name": "Вчителі"
+  },
+  {
+   "slug": "asystenty",
+   "name": "Асистенти вчителя"
+  },
+  {
+   "slug": "fahivtsi",
+   "name": "Фахівці супроводу"
+  },
+  {
+   "slug": "inshi",
+   "name": "Інші працівники"
+  }
+ ]
+}

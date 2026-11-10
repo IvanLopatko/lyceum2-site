@@ -1,0 +1,69 @@
+{
+ "slug": "kontakty",
+ "parent": "",
+ "title": "Контакти",
+ "lead": "Як нас знайти і зв’язатися: три корпуси, телефони, графік прийому.",
+ "order": 0,
+ "template": false,
+ "updated": "2026-11-10",
+ "blocks": [
+  {
+   "type": "component",
+   "name": "contacts",
+   "args": {}
+  },
+  {
+   "type": "h",
+   "level": 2,
+   "text": "Хто за що відповідає"
+  },
+  {
+   "type": "component",
+   "name": "responsible",
+   "args": {}
+  },
+  {
+   "type": "h",
+   "level": 2,
+   "text": "Корпуси"
+  },
+  {
+   "type": "cards",
+   "items": [
+    {
+     "icon": "home",
+     "title": "Головний корпус",
+     "text": "І провулок Шевченка, 18, м. Біляївка, 67602"
+    },
+    {
+     "icon": "sun",
+     "title": "Початкова школа",
+     "text": "Вулиця Шевченка, 29, м. Біляївка, 67602"
+    },
+    {
+     "icon": "food",
+     "title": "Харчоблок",
+     "text": "І провулок Шевченка, 11, м. Біляївка, 67602"
+    }
+   ]
+  },
+  {
+   "type": "component",
+   "name": "map",
+   "args": {}
+  },
+  {
+   "type": "buttons",
+   "items": [
+    {
+     "label": "Подати запит на інформацію",
+     "url": "/publichna-informacia/"
+    },
+    {
+     "label": "Карта сайту",
+     "url": "/karta-sajtu/"
+    }
+   ]
+  }
+ ]
+}

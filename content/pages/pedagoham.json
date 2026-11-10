@@ -1,0 +1,16 @@
+{
+ "slug": "pedagoham",
+ "parent": "",
+ "title": "Педагогам",
+ "lead": "Робочий розділ колективу: нормативна база, атестація, підвищення кваліфікації, методична робота.",
+ "order": 5,
+ "template": true,
+ "updated": "2026-10-30",
+ "blocks": [
+  {
+   "type": "component",
+   "name": "children",
+   "args": {}
+  }
+ ]
+}

@@ -1,0 +1,393 @@
+[
+ {
+  "id": 101,
+  "title": "Фінансовий звіт за III квартал 2026 року",
+  "sections": [
+   "finansy"
+  ],
+  "number": "",
+  "approved": "2026-10-10",
+  "published": "2026-10-15",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 235,
+  "title": "Графік атестації педагогічних працівників на 2026/2027 рік",
+  "sections": [
+   "kadry"
+  ],
+  "number": "",
+  "approved": "2026-10-10",
+  "published": "2026-10-14",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 223,
+  "title": "Перелік благодійної допомоги за III квартал 2026 року",
+  "sections": [
+   "blagodijna"
+  ],
+  "number": "",
+  "approved": "2026-10-05",
+  "published": "2026-10-09",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 102,
+  "title": "Звіт директора за 2025/2026 навчальний рік",
+  "sections": [
+   "zvity"
+  ],
+  "number": "",
+  "approved": "2026-09-20",
+  "published": "2026-09-24",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 104,
+  "title": "Правила доступу і перебування на території закладу",
+  "sections": [
+   "bezpeka"
+  ],
+  "number": "",
+  "approved": "2026-09-15",
+  "published": "",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 105,
+  "title": "Перспективний план підвищення кваліфікації",
+  "sections": [
+   "kadry"
+  ],
+  "number": "",
+  "approved": "2026-09-10",
+  "published": "2026-09-12",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 255,
+  "title": "Алгоритм дій учасників освітнього процесу під час повітряної тривоги",
+  "sections": [
+   "bezpeka"
+  ],
+  "number": "додаток до наказу №192-о",
+  "approved": "2026-09-05",
+  "published": "2026-11-10",
+  "valid": "current",
+  "file": "uploads/docs/alhorytm-povitriana-tryvoha-2026.pdf",
+  "demo": false
+ },
+ {
+  "id": 103,
+  "title": "План заходів щодо запобігання та протидії булінгу",
+  "sections": [
+   "bulinh"
+  ],
+  "number": "",
+  "approved": "2026-09-01",
+  "published": "2026-09-05",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 229,
+  "title": "Порядок подання та розгляду заяв про випадки булінгу",
+  "sections": [
+   "bulinh"
+  ],
+  "number": "",
+  "approved": "2026-09-01",
+  "published": "2026-09-05",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 230,
+  "title": "Порядок реагування на доведені випадки булінгу",
+  "sections": [
+   "bulinh"
+  ],
+  "number": "",
+  "approved": "2026-09-01",
+  "published": "2026-09-05",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 224,
+  "title": "План роботи ліцею на 2026/2027 навчальний рік",
+  "sections": [
+   "zvity"
+  ],
+  "number": "",
+  "approved": "2026-08-30",
+  "published": "2026-09-03",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 99,
+  "title": "Освітня програма на 2026/2027 навчальний рік",
+  "sections": [
+   "osvitni"
+  ],
+  "number": "",
+  "approved": "2026-08-28",
+  "published": "2026-09-02",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 222,
+  "title": "Навчальний план на 2026/2027 навчальний рік",
+  "sections": [
+   "osvitni"
+  ],
+  "number": "",
+  "approved": "2026-08-28",
+  "published": "2026-09-02",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 249,
+  "title": "Освітня програма початкової освіти (1–4 класи) на 2026/2027 навчальний рік",
+  "sections": [
+   "osvitni"
+  ],
+  "number": "",
+  "approved": "2026-08-27",
+  "published": "2026-11-10",
+  "valid": "current",
+  "file": "uploads/docs/osvitnia-prohrama-1-4-2026-2027.pdf",
+  "demo": false
+ },
+ {
+  "id": 251,
+  "title": "Освітня програма базової середньої освіти (5–9 класи) на 2026/2027 навчальний рік",
+  "sections": [
+   "osvitni"
+  ],
+  "number": "",
+  "approved": "2026-08-27",
+  "published": "2026-11-10",
+  "valid": "current",
+  "file": "uploads/docs/osvitnia-prohrama-5-9-2026-2027.pdf",
+  "demo": false
+ },
+ {
+  "id": 253,
+  "title": "Освітня програма профільної середньої освіти (10–11 класи) на 2026/2027 навчальний рік",
+  "sections": [
+   "osvitni",
+   "profilna"
+  ],
+  "number": "",
+  "approved": "2026-08-27",
+  "published": "2026-11-10",
+  "valid": "current",
+  "file": "uploads/docs/osvitnia-prohrama-10-11-2026-2027.pdf",
+  "demo": false
+ },
+ {
+  "id": 227,
+  "title": "Наказ про зарахування до 1 класу",
+  "sections": [
+   "pryjom"
+  ],
+  "number": "",
+  "approved": "2026-08-25",
+  "published": "2026-08-27",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 234,
+  "title": "Інструктивно-методичні рекомендації на 2026/2027 рік",
+  "sections": [
+   "normatyvna"
+  ],
+  "number": "",
+  "approved": "2026-08-15",
+  "published": "2026-08-18",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 226,
+  "title": "Звіт про самооцінювання за 2025/2026 навчальний рік",
+  "sections": [
+   "strategiya"
+  ],
+  "number": "",
+  "approved": "2026-06-25",
+  "published": "2026-06-30",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 232,
+  "title": "Результати моніторингу якості освіти за 2025/2026 рік",
+  "sections": [
+   "monitorynh"
+  ],
+  "number": "",
+  "approved": "2026-06-20",
+  "published": "2026-06-24",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 225,
+  "title": "Стратегія розвитку ліцею на 2026–2031 роки",
+  "sections": [
+   "strategiya"
+  ],
+  "number": "",
+  "approved": "2026-06-15",
+  "published": "2026-06-20",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 233,
+  "title": "Антикорупційна програма ліцею",
+  "sections": [
+   "koruptsiya"
+  ],
+  "number": "",
+  "approved": "2026-02-01",
+  "published": "2026-02-05",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 228,
+  "title": "Рішення про закріплення території обслуговування",
+  "sections": [
+   "pryjom"
+  ],
+  "number": "",
+  "approved": "2026-01-20",
+  "published": "2026-01-28",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 100,
+  "title": "Кошторис на 2026 рік",
+  "sections": [
+   "finansy"
+  ],
+  "number": "",
+  "approved": "2026-01-15",
+  "published": "2026-01-20",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 231,
+  "title": "Паспорт доступності закладу",
+  "sections": [
+   "dostupnist"
+  ],
+  "number": "",
+  "approved": "2025-11-10",
+  "published": "2025-11-14",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 98,
+  "title": "Статут Біляївського ліцею №2",
+  "sections": [
+   "ustanovchi"
+  ],
+  "number": "",
+  "approved": "2024-02-14",
+  "published": "2024-02-20",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 221,
+  "title": "Виписка з Єдиного державного реєстру",
+  "sections": [
+   "ustanovchi"
+  ],
+  "number": "",
+  "approved": "2024-02-14",
+  "published": "2024-02-16",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 220,
+  "title": "Ліцензія на провадження освітньої діяльності",
+  "sections": [
+   "ustanovchi"
+  ],
+  "number": "",
+  "approved": "2023-06-20",
+  "published": "2023-06-25",
+  "valid": "current",
+  "file": "",
+  "demo": true
+ },
+ {
+  "id": 257,
+  "title": "Комунікаційна стратегія щодо переходу до старшої профільної школи на 2026–2027 навчальний рік",
+  "sections": [
+   "profilna"
+  ],
+  "number": "",
+  "approved": "",
+  "published": "2026-11-10",
+  "valid": "current",
+  "file": "uploads/docs/komunikatsiina-stratehiia-profilna-shkola-2026-2027.pdf",
+  "demo": false
+ },
+ {
+  "id": 259,
+  "title": "План комунікаційних заходів щодо впровадження старшої профільної школи на 2026–2027 роки",
+  "sections": [
+   "profilna"
+  ],
+  "number": "",
+  "approved": "",
+  "published": "2026-11-10",
+  "valid": "current",
+  "file": "uploads/docs/plan-komunikatsiinykh-zakhodiv-profilna-shkola-2026-2027.pdf",
+  "demo": false
+ }
+]

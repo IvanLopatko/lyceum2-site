@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Статична копія локального WordPress-сайту для показу (GitHub Pages).
+"""Статична копія сайту для показу (GitHub Pages): адмінки й пошуку в ній немає.
 
 Обходить усі внутрішні посилання, зберігає сторінки як <шлях>/index.html,
 а стилі, скрипти, фото й PDF — поруч. Усі адреси переписує на відносні,
@@ -21,7 +21,7 @@ BASE = sys.argv[1].rstrip('/')
 OUT = sys.argv[2]
 BASE_ESC = BASE.replace('/', '\\/')
 
-SKIP = re.compile(r'^/(wp-json|wp-admin|wp-login\.php|xmlrpc\.php|wp-cron\.php)|/feed/?$|/embed/?$|/comments/feed|/trackback/?$')
+SKIP = re.compile(r'^/(admin|wp-json|wp-admin|wp-login\.php|xmlrpc\.php)(/|$)|/feed/?$')
 ASSET_EXT = re.compile(r'\.(css|js|mjs|png|jpe?g|gif|webp|svg|ico|pdf|woff2?|ttf|eot|otf|mp4|webm|json|xml|txt|docx?|xlsx?)$', re.I)
 
 # посилання в атрибутах, srcset, url() у стилях, а також адреси в JSON (\/)
@@ -163,7 +163,7 @@ def rewrite_html(html: str, me: str) -> str:
     html = re.sub(r'<script[^>]*>[^<]*_wpemojiSettings.*?</script>', '', html, flags=re.S)
     html = re.sub(r'<script[^>]*id="wp-emoji-settings"[^>]*>.*?</script>', '', html, flags=re.S)
     html = html.replace('<head>', '<head>\n<meta name="robots" content="noindex, nofollow">\n'
-                        '<style>.vit-utility .vit-search,.wp-block-search{display:none!important}</style>', 1)
+                        '<style>.search{display:none!important}</style>', 1)
     return html
 
 
@@ -218,6 +218,4 @@ if body:
 with open(os.path.join(OUT, 'robots.txt'), 'w') as f:
     f.write('User-agent: *\nDisallow: /\n')
 open(os.path.join(OUT, '.nojekyll'), 'w').close()
-import subprocess
-subprocess.run([sys.executable, '-I', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'clean_static.py'), OUT])
 print('Готово:', pages, 'сторінок,', assets, 'файлів')

@@ -1,0 +1,8 @@
+# Завантажені файли не виконуються як програми
+Options -Indexes -ExecCGI
+<FilesMatch "\.(php|phtml|phar|php\d|pl|py|cgi|sh|htaccess)$">
+  Require all denied
+</FilesMatch>
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>

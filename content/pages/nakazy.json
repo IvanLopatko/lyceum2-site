@@ -1,0 +1,22 @@
+{
+ "slug": "nakazy",
+ "parent": "batkam-i-uchniam",
+ "title": "Накази та оголошення",
+ "lead": "Накази, що стосуються зарахування, переведення та організації навчання.",
+ "order": 7,
+ "template": true,
+ "updated": "2026-10-30",
+ "blocks": [
+  {
+   "type": "p",
+   "text": "Тут оприлюднюються накази, які безпосередньо стосуються учнів і родин."
+  },
+  {
+   "type": "component",
+   "name": "documents",
+   "args": {
+    "section": "pryjom"
+   }
+  }
+ ]
+}
