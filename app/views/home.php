@@ -28,8 +28,8 @@ $tiles = [
 <section class="hero">
   <div class="wrap hero-in">
     <div class="hero-txt">
-      <p class="eyebrow">Біляївка · Одеський район · з <?= e(setting('site.founded', '1897')) ?> року</p>
-      <h1>Школа, яку впізнають за <span class="grad-text">вітрилами</span></h1>
+      <p class="eyebrow hero-eyebrow">Біляївка · Одеський район · з <?= e(setting('site.founded', '1897')) ?> року</p>
+      <h1>Школа, яку впізнають за <span class="hl">вітрилами</span></h1>
       <p class="lead">Комунальний ліцей з інклюзивним навчанням і трьома корпусами. Тут вчаться думати, дружити й не боятися ставити питання.</p>
       <div class="actions">
         <a class="btn" href="<?= e(url('/batkam-i-uchniam/vstup/')) ?>">Вступ до ліцею</a>
@@ -44,9 +44,11 @@ $tiles = [
     </div>
     <div class="hero-art" aria-hidden="true">
       <span class="hero-sun"></span>
-      <img src="<?= e(url('/uploads/emblema.png')) ?>" alt="" width="240" height="240">
-      <span class="hero-motto">«<?= e(setting('site.motto')) ?>»</span>
-      <span class="hero-wave"></span>
+      <span class="hero-emb"><img src="<?= e(url('/uploads/emblema.png')) ?>" alt="" width="240" height="240"><span class="hero-motto">«<?= e(setting('site.motto')) ?>»</span></span>
+      <svg class="hero-wave" viewBox="0 0 1200 62" preserveAspectRatio="none">
+        <path d="M0 34 C150 6 300 62 450 34 S750 6 900 34 S1100 62 1200 34 V62 H0z" fill="#BFDBFF" opacity=".7"/>
+        <path d="M0 46 C200 24 350 66 550 46 S850 24 1000 46 S1150 64 1200 50 V62 H0z" fill="#8FC0FF" opacity=".55"/>
+      </svg>
     </div>
   </div>
   <div class="wrap"><?= component_today() ?></div>

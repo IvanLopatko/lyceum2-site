@@ -27,6 +27,7 @@ $showDemo = setting('site.demo_bar', true) && has_demo();
 </head>
 <body<?= !empty($is_home) ? ' class="is-home"' : '' ?>>
 <a class="skip" href="#main">Перейти до вмісту</a>
+<div class="stripe" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <?php if ($showDemo): ?>
 <div class="demo-bar" role="note"><div class="wrap"><span>Зразок сайту: частина текстів і цифр показує, як виглядатиме наповнений сайт, і буде замінена на фактичні.</span><button type="button" class="demo-x" aria-label="Сховати повідомлення">×</button></div></div>
 <?php endif; ?>
@@ -75,6 +76,7 @@ $showDemo = setting('site.demo_bar', true) && has_demo();
 </main>
 
 <footer class="site-footer">
+  <div class="stripe" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="wrap footer-in">
     <div class="footer-brand">
       <img src="<?= e(url('/uploads/emblema.png')) ?>" alt="" width="64" height="64">

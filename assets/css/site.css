@@ -690,3 +690,57 @@ tbody tr:hover td { background: #FAFCFF; }
 .club::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 5px; background: var(--tone); }
 .club b { color: var(--ink); }
 .clubs > :nth-child(4n+2)::before { background: var(--sun); }
+
+/* ═════════ Перший екран — кольори й малюнок першого варіанта дизайну ═════════ */
+.stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 6px; }
+.stripe i:nth-child(1) { background: var(--green); }
+.stripe i:nth-child(2) { background: var(--sun); }
+.stripe i:nth-child(3) { background: var(--sail); }
+.stripe i:nth-child(4) { background: var(--blue); }
+.demo-bar { background: var(--sun); color: var(--ink); font-weight: 600; }
+
+.hero-eyebrow { color: var(--sail); letter-spacing: .14em; }
+.hero h1 { font-size: clamp(2.3rem, 5.4vw, 4rem); line-height: 1.02; }
+.hl { background: linear-gradient(100deg, var(--sail) 0%, #FF8A3D 45%, #F2B600 100%); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+.chips li { font-weight: 600; box-shadow: inset 0 0 0 1px var(--line), var(--sh); }
+
+.hero-art { background: linear-gradient(135deg, #DDECFF 0%, #EAF4FF 40%, #FFF3CE 100%); background-size: 180% 180%; box-shadow: none; gap: 0; }
+.hero-sun { width: 40%; right: -10%; top: -12%; background: var(--sun); opacity: .85; }
+.hero-emb { position: relative; z-index: 1; display: grid; justify-items: center; gap: 16px; }
+.hero-art .hero-emb img { width: clamp(150px, 17vw, 210px); height: auto; border-radius: 50%; background: #fff; box-shadow: 0 0 0 8px rgba(255, 255, 255, .75), 0 24px 48px -18px rgba(22, 34, 74, .45); animation: none; }
+.hero-motto { color: var(--ink); font-weight: 700; font-size: 1.06rem; }
+.hero-wave { position: absolute; left: 0; right: 0; bottom: -2px; width: 100%; height: 62px; border-radius: 0; background: none; box-shadow: none; }
+
+/* «Сьогодні в ліцеї» — чотири кольорові картки */
+.today { background: none; box-shadow: none; padding: 0; gap: 14px; }
+.today li, .today li:first-child { align-content: start; background: var(--tone-t); border-radius: var(--r-md); padding: 20px 22px; border-left: 0; }
+.today > :nth-child(2) { --tone: var(--sail); --tone-t: var(--sail-t); }
+.today > :nth-child(4) { --tone: var(--sun-d); --tone-t: var(--sun-t); }
+.today .ico { width: 44px; height: 44px; border-radius: 14px; background: #fff; }
+.today .ico::after { inset: 11px; }
+.today-l { color: var(--ink-2); font-weight: 700; }
+.today b { font-weight: 700; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-art { animation: hero-bg 14s ease-in-out infinite alternate; }
+  .hero-emb { animation: float 6.5s ease-in-out infinite; }
+  .hero-wave { animation: bob 6s ease-in-out infinite; }
+  .hl { animation: shine 5s ease-in-out infinite alternate; }
+}
+@keyframes hero-bg { 0% { background-position: 0% 30%; } 100% { background-position: 100% 70%; } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+@keyframes shine { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+
+@media (max-width: 860px) {
+  .hero-art { aspect-ratio: auto; padding: 34px 20px 66px; }
+  .hero-art .hero-emb img { width: 140px; }
+  .today { row-gap: 12px; }
+  .today li:nth-child(3) { padding-left: 22px; }
+}
+@media (max-width: 640px) {
+  .demo-bar { font-weight: 500; }
+  .today { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 0; }
+  .today li, .today li:first-child, .today li + li, .today li:nth-child(3) { grid-template-columns: minmax(0, 1fr); padding: 14px; border-top: 0; }
+  .today .ico { grid-row: auto; width: 38px; height: 38px; border-radius: 12px; margin-bottom: 8px; }
+  .today .ico::after { inset: 9px; }
+}

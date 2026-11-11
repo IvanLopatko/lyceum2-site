@@ -21,6 +21,7 @@
 </head>
 <body class="is-home">
 <a class="skip" href="#main">Перейти до вмісту</a>
+<div class="stripe" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <div class="demo-bar" role="note"><div class="wrap"><span>Зразок сайту: частина текстів і цифр показує, як виглядатиме наповнений сайт, і буде замінена на фактичні.</span><button type="button" class="demo-x" aria-label="Сховати повідомлення">×</button></div></div>
 
 <header class="site-header">
@@ -69,8 +70,8 @@
 <section class="hero">
   <div class="wrap hero-in">
     <div class="hero-txt">
-      <p class="eyebrow">Біляївка · Одеський район · з 1897 року</p>
-      <h1>Школа, яку впізнають за <span class="grad-text">вітрилами</span></h1>
+      <p class="eyebrow hero-eyebrow">Біляївка · Одеський район · з 1897 року</p>
+      <h1>Школа, яку впізнають за <span class="hl">вітрилами</span></h1>
       <p class="lead">Комунальний ліцей з інклюзивним навчанням і трьома корпусами. Тут вчаться думати, дружити й не боятися ставити питання.</p>
       <div class="actions">
         <a class="btn" href="batkam-i-uchniam/vstup/">Вступ до ліцею</a>
@@ -83,9 +84,11 @@
     </div>
     <div class="hero-art" aria-hidden="true">
       <span class="hero-sun"></span>
-      <img src="uploads/emblema.png" alt="" width="240" height="240">
-      <span class="hero-motto">«Вітрила юності»</span>
-      <span class="hero-wave"></span>
+      <span class="hero-emb"><img src="uploads/emblema.png" alt="" width="240" height="240"><span class="hero-motto">«Вітрила юності»</span></span>
+      <svg class="hero-wave" viewBox="0 0 1200 62" preserveAspectRatio="none">
+        <path d="M0 34 C150 6 300 62 450 34 S750 6 900 34 S1100 62 1200 34 V62 H0z" fill="#BFDBFF" opacity=".7"/>
+        <path d="M0 46 C200 24 350 66 550 46 S850 24 1000 46 S1150 64 1200 50 V62 H0z" fill="#8FC0FF" opacity=".55"/>
+      </svg>
     </div>
   </div>
   <div class="wrap"><ul class="today" aria-label="Сьогодні в ліцеї"><li><span class="ico i-calendar" aria-hidden="true"></span><span class="today-l">Навчання</span><b>Очно, у дві зміни</b><small>друга зміна — з 12:00</small></li><li><span class="ico i-shield" aria-hidden="true"></span><span class="today-l">Під час тривоги</span><b>Переходимо в укриття</b><small>контрольний час — 09:00 і 13:00</small></li><li><span class="ico i-food" aria-hidden="true"></span><span class="today-l">Харчування</span><b>Меню на тиждень</b><small>1–4 класи — безкоштовно</small></li><li><span class="ico i-phone" aria-hidden="true"></span><span class="today-l">Приймальня</span><b>098 946 36 81</b><small>приймальня, Пн–Пт 08:00–15:30</small></li></ul></div>
@@ -134,7 +137,7 @@
         <p>Що зміниться для нинішніх дев’ятикласників, як обрати профіль і де поставити запитання.</p>
         <p class="promo-now"><span>Листопад за планом</span>Інфографіка: що таке старша профільна школа, її мета й переваги</p>        <a class="btn btn-light" href="navchannia/profilna-shkola/">Усе про профільну школу</a>
       </div>
-      <div class="promo-cd" aria-hidden="true"><b data-count>295</b><span>днів до старту</span></div>
+      <div class="promo-cd" aria-hidden="true"><b data-count>294</b><span>дні до старту</span></div>
     </div>
   </div>
 </section>
@@ -179,6 +182,7 @@
 </main>
 
 <footer class="site-footer">
+  <div class="stripe" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="wrap footer-in">
     <div class="footer-brand">
       <img src="uploads/emblema.png" alt="" width="64" height="64">
