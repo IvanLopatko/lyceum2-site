@@ -1,8 +1,15 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php
 /** @var string $body @var string $title */
 $siteName = setting('site.name', 'Біляївський ліцей №2');
 $fullTitle = ($title ?? '') !== '' ? $title . ' — ' . $siteName : $siteName . ' — ' . setting('site.motto');
-$desc = $description ?? 'Офіційний сайт Біляївського ліцею №2 Біляївської міської ради Одеського району Одеської області.';
+$desc = trim(strip_tags((string) ($description ?? '')));
+if ($desc === '') {
+    $desc = 'Офіційний сайт Біляївського ліцею №2 Біляївської міської ради Одеського району Одеської області.';
+}
+$ogImage = '/' . ltrim(!empty($image) ? (string) $image : 'uploads/emblema.png', '/');
+// Поки на сайті є зразкові дані й увімкнено смугу «Зразок сайту», пошуковикам його не показуємо.
+$hideFromSearch = !empty($noindex) || (($status ?? 200) !== 200) || (setting('site.demo_bar', true) && has_demo());
 $path = current_path();
 $c = setting('contacts', []);
 $showDemo = setting('site.demo_bar', true) && has_demo();
@@ -16,14 +23,18 @@ $showDemo = setting('site.demo_bar', true) && has_demo();
 <meta property="og:title" content="<?= e($fullTitle) ?>">
 <meta property="og:description" content="<?= e(excerpt($desc, 160)) ?>">
 <meta property="og:type" content="website">
-<meta property="og:image" content="<?= e(url('/uploads/emblema.png')) ?>">
+<meta property="og:image" content="<?= e(abs_url($ogImage)) ?>">
+<meta property="og:url" content="<?= e(abs_url($path)) ?>">
+<link rel="canonical" href="<?= e(abs_url($path)) ?>">
+<?php if ($hideFromSearch): ?><meta name="robots" content="noindex, nofollow">
+<?php endif; ?>
 <meta name="theme-color" content="#1C6FE0">
 <link rel="icon" href="<?= e(url('/uploads/emblema.png')) ?>">
 <link rel="preload" href="<?= e(url('/assets/fonts/onest-cyrillic.woff2')) ?>" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="<?= e(asset('/assets/css/fonts.css')) ?>">
 <link rel="stylesheet" href="<?= e(asset('/assets/css/icons.css')) ?>">
 <link rel="stylesheet" href="<?= e(asset('/assets/css/site.css')) ?>">
-<script>try{var a=JSON.parse(localStorage.getItem('a11y')||'{}');var r=document.documentElement;if(a.size)r.dataset.size=a.size;if(a.space)r.dataset.space='1';if(a.contrast)r.dataset.contrast='1';}catch(e){}</script>
+<script><?= A11Y_BOOT ?></script>
 </head>
 <body<?= !empty($is_home) ? ' class="is-home"' : '' ?>>
 <a class="skip" href="#main">Перейти до вмісту</a>
@@ -88,7 +99,7 @@ $showDemo = setting('site.demo_bar', true) && has_demo();
         <li><?= e($c['phone'] ?: 'Телефон уточнюється') ?></li>
         <li><a href="mailto:<?= e($c['email']) ?>"><?= e($c['email']) ?></a></li>
         <li><?= e($c['hours']) ?></li>
-        <li><a href="<?= e($c['facebook']) ?>" target="_blank" rel="noopener">Спільнота у Facebook</a></li>
+        <?php if (!empty($c['facebook'])): ?><li><a href="<?= e(safe_url((string) $c['facebook'])) ?>" target="_blank" rel="noopener">Спільнота у Facebook</a></li><?php endif; ?>
       </ul>
     </div>
     <div>

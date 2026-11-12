@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <header class="head"><h1>Кадри</h1><a class="btn" href="<?= e(url('/admin/kadry/novyi/')) ?>">+ Людина</a></header>
 <?php foreach (taxonomies()['staff'] as $g): $people = array_filter(staff(), static fn($p) => $p['group'] === $g['slug']); if (!$people) continue; ?>
   <h2 class="sub"><?= e($g['name']) ?> <small class="muted"><?= count($people) ?></small></h2>

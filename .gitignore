@@ -4,8 +4,12 @@ config/*
 !config/README.md
 # Історія правок з адмінки (на сервері)
 content/.history/
+# Кошик видалених файлів (на сервері, 30 днів)
+content/.trash/
 *.lock
 *.tmp*
 .DS_Store
 # Сирі дані з Facebook
 tools/fb-raw-*.json
+# Архів для завантаження на хостинг (tools/pack_for_hosting.py)
+dist/

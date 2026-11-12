@@ -1,12 +1,17 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php
 /** @var string $body */
 $flash = $_SESSION['flash'] ?? null;
 unset($_SESSION['flash']);
 $here = $GLOBALS['section'] ?? '';
+$isAdminUser = (($user['role'] ?? '') === 'admin');
 $menu = [
     '' => ['Огляд', 'home'], 'storinky' => ['Сторінки', 'doc'], 'novyny' => ['Новини', 'chat'], 'dokumenty' => ['Документи', 'scale'],
-    'kadry' => ['Кадри', 'users'], 'gurtky' => ['Гуртки', 'star'], 'nalashtuvannia' => ['Налаштування', 'key'], 'oblikovyi-zapys' => ['Обліковий запис', 'lock'],
+    'kadry' => ['Кадри', 'users'], 'gurtky' => ['Гуртки', 'star'], 'istoriia' => ['Історія змін', 'clock'], 'nalashtuvannia' => ['Налаштування', 'key'], 'oblikovyi-zapys' => ['Обліковий запис', 'lock'],
 ];
+if (!$isAdminUser) {
+    unset($menu['nalashtuvannia']); // налаштування сайту — лише для адміністратора
+}
 ?><!doctype html>
 <html lang="uk">
 <head>

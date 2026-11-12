@@ -6,6 +6,11 @@
 
 declare(strict_types=1);
 
+if (!defined('ROOT')) {
+    http_response_code(404);
+    exit;
+}
+
 const PAGE_ICONS = [
     'istoriia' => 'book', 'struktura-ta-organy' => 'users', 'korpusy-i-baza' => 'home', 'ustanovchi-dokumenty' => 'doc', 'vakansii' => 'hand',
     'osvitni-programy' => 'book', 'pochatkova-shkola' => 'sun', 'bazova-shkola' => 'compass', 'profilna-shkola' => 'award', 'rozklad' => 'clock',
@@ -18,7 +23,7 @@ const PAGE_ICONS = [
     'samootsiniuvannia' => 'check', 'litsenzovanyj-obsiah' => 'users', 'mova-osvitnoho-protsesu' => 'globe', 'dodatkovi-posluhy' => 'star',
     'zapobihannia-koruptsii' => 'scale', 'shcho-opryliudniuiemo' => 'eye', 'normatyvna-baza' => 'scale', 'pidvyshchennia-kvalifikatsii' => 'award',
     'atestatsiia' => 'check', 'metodychna-robota' => 'book', 'rada-litseiu' => 'users', 'nashi-dosiahnennia' => 'award',
-    'nashi-vypusknyky' => 'flag', 'uchnivske-samovriaduvannia' => 'chat', 'natsionalna-identychnist' => 'flag',
+    'nashi-vypusknyky' => 'flag', 'biblioteka' => 'book', 'uchnivske-samovriaduvannia' => 'chat', 'natsionalna-identychnist' => 'flag',
 ];
 
 function page_icon(string $slug): string
@@ -56,7 +61,7 @@ function component_documents(array $a, array $ctx = []): string
 function person_card(array $p): string
 {
     if ($p['photo']) {
-        $ph = '<img src="' . e(upload_url($p['photo'])) . '" alt="" loading="lazy" width="240" height="240">';
+        $ph = '<img src="' . e(thumb_url($p['photo'])) . '" alt="" loading="lazy" width="240" height="240">';
     } else {
         $parts = preg_split('~\s+~u', trim($p['name'])) ?: [''];
         $ini = mb_strtoupper(mb_substr($parts[0], 0, 1) . mb_substr($parts[1] ?? '', 0, 1));
@@ -171,13 +176,14 @@ function component_roadmap(array $a = [], array $ctx = []): string
 
 function component_alarm_shifts(array $a = [], array $ctx = []): string
 {
+    $hx = 'h' . (int) ($ctx['sub'] ?? 3);
     $rows = [
         ['Перша зміна', '07:30', '09:00', 'Якщо тривога триває до 07:30 — учні залишаються вдома й не вирушають до ліцею.', 'Якщо тривога триває до 09:00 — навчання першої зміни переходить у дистанційний формат.'],
         ['Друга зміна', '11:30', '13:00', 'Якщо тривога триває до 11:30 — учні залишаються вдома. Початок занять другої зміни — о 12:00, якщо адміністрація не повідомила інше.', 'Якщо тривога триває до 13:00 — навчання другої зміни переходить у дистанційний формат.'],
     ];
     $out = '<div class="shifts">';
     foreach ($rows as [$name, $home, $ctrl, $t1, $t2]) {
-        $out .= '<div class="shift"><h3>' . $name . '</h3><div class="shift-row"><b>' . $home . '</b><p>' . $t1 . '</p></div>'
+        $out .= '<div class="shift"><' . $hx . '>' . $name . '</' . $hx . '><div class="shift-row"><b>' . $home . '</b><p>' . $t1 . '</p></div>'
             . '<div class="shift-row is-ctrl"><b>' . $ctrl . '</b><p><strong>Контрольний час.</strong> ' . $t2 . '</p></div></div>';
     }
     return $out . '</div>';

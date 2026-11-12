@@ -1,7 +1,12 @@
-<?php /** @var array $item @var bool $isNew */ ?>
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
+<?php /** @var array $item @var bool $isNew */
+$photos = news_photos($item);
+$lim = upload_limits();
+$versions = $isNew ? 0 : count(store_versions('news/' . $item['id'] . '.json'));
+?>
 <header class="head">
   <div><p class="crumb"><a href="<?= e(url('/admin/novyny/')) ?>">Новини</a></p><h1><?= $isNew ? 'Нова новина' : 'Редагування новини' ?></h1></div>
-  <?php if (!$isNew): ?><a class="btn btn-ghost" href="<?= e(url(news_url($item))) ?>" target="_blank" rel="noopener">Переглянути ↗</a><?php endif; ?>
+  <?php if (!$isNew): ?><a class="btn btn-ghost" href="<?= e(url(news_url($item))) ?>" target="_blank" rel="noopener"><?= !empty($item['draft']) ? 'Попередній перегляд' : 'Переглянути' ?> ↗</a><?php endif; ?>
 </header>
 <form method="post" enctype="multipart/form-data" class="edit" id="news-form">
   <?= csrf_field() ?>
@@ -20,21 +25,26 @@
   </div>
   <input type="hidden" name="text_json" id="text-json">
   <h2 class="sub">Фото</h2>
-  <?php if ($item['images']): ?>
+  <?php if ($photos): ?>
   <div class="photos">
-    <?php foreach ($item['images'] as $img): ?>
-      <figure><img src="<?= e(upload_url($img)) ?>" alt="" loading="lazy">
-        <label class="check"><input type="radio" name="cover" value="<?= e($img) ?>"<?= $item['cover'] === $img ? ' checked' : '' ?>> обкладинка</label>
-        <label class="check"><input type="checkbox" name="remove[]" value="<?= e($img) ?>"> прибрати</label></figure>
+    <?php foreach ($photos as $img): ?>
+      <figure><img src="<?= e(thumb_url($img)) ?>" alt="" loading="lazy">
+        <label class="check"><input type="radio" name="cover" value="<?= e($img) ?>"<?= news_cover($item) === $img ? ' checked' : '' ?>> обкладинка</label>
+        <label class="check"><input type="checkbox" name="remove[]" value="<?= e($img) ?>"> прибрати</label>
+        <input class="alt" name="alt[<?= e($img) ?>]" value="<?= e((string) (($item['alts'] ?? [])[$img] ?? '')) ?>" maxlength="200" placeholder="Що на фото (для незрячих)" aria-label="Опис фото для програм читання з екрана"></figure>
     <?php endforeach; ?>
   </div>
+  <p class="muted small">Опис фото читають уголос програми для незрячих. Кілька слів: «Учні 5-А саджають дерева біля корпусу». Можна лишити порожнім.</p>
   <?php endif; ?>
-  <label class="upload">Додати фото (можна кілька, JPG/PNG, до 15 МБ кожне)<input type="file" name="photos[]" accept="image/jpeg,image/png,image/webp" multiple></label>
+  <label class="upload">Додати фото (JPG/PNG, до 15 МБ кожне, за один раз — до <?= (int) $lim['files'] ?> фото)<input type="file" name="photos[]" accept="image/jpeg,image/png,image/webp" multiple data-max-files="<?= (int) $lim['files'] ?>" data-max-bytes="<?= (int) min($lim['post'], PHP_INT_MAX) ?>"></label>
   <div class="fields">
     <label class="wide">Короткий опис для списку (необов’язково)<textarea name="excerpt" rows="2"><?= e($item['excerpt']) ?></textarea></label>
     <label class="wide">Посилання на допис у Facebook (необов’язково)<input type="url" name="source" value="<?= e($item['source']) ?>"></label>
   </div>
-  <div class="savebar"><button class="btn" type="submit">Зберегти</button></div>
+  <label class="check"><input type="checkbox" name="draft"<?= !empty($item['draft']) ? ' checked' : '' ?>> Чернетка — зберегти, але поки не показувати на сайті</label>
+  <div class="savebar"><button class="btn" type="submit">Зберегти</button>
+    <?php if (!empty($item['draft'])): ?><span class="pill is-due">чернетка: на сайті не видно</span><?php endif; ?>
+    <?php if ($versions): ?><a class="muted small" href="<?= e(url('/admin/istoriia/?f=' . rawurlencode('news/' . $item['id'] . '.json'))) ?>">Попередні версії (<?= $versions ?>)</a><?php endif; ?></div>
 </form>
 <?php if (!$isNew): ?>
 <form method="post" class="danger-zone" data-confirm="Видалити новину?"><?= csrf_field() ?><input type="hidden" name="do" value="delete"><button class="btn btn-danger-ghost" type="submit">Видалити новину</button></form>

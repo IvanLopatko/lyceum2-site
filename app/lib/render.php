@@ -8,12 +8,24 @@
 
 declare(strict_types=1);
 
+if (!defined('ROOT')) {
+    http_response_code(404);
+    exit;
+}
+
 const CALLOUT_TONES = ['sun' => 'sun', 'blue' => 'blue', 'green' => 'green', 'sail' => 'sail', 'note' => 'sun', 'info' => 'blue', 'alert' => 'sail'];
 
 function render_blocks(array $blocks, array $ctx = []): string
 {
     $out = '';
+    // Рівень заголовків усередині карток, виносок і порівнянь: на один нижчий за останній
+    // заголовок сторінки, а якщо заголовків ще не було — другий (щоб не перескакувати з h1 на h3).
+    $sub = 2;
     foreach ($blocks as $b) {
+        if (($b['type'] ?? '') === 'h') {
+            $sub = ((int) ($b['level'] ?? 2) === 3 ? 3 : 2) + 1;
+        }
+        $ctx['sub'] = $sub;
         $out .= render_block($b, $ctx);
     }
     return $out;
@@ -22,6 +34,7 @@ function render_blocks(array $blocks, array $ctx = []): string
 function render_block(array $b, array $ctx): string
 {
     $t = $b['type'] ?? '';
+    $hx = 'h' . (int) ($ctx['sub'] ?? 3);
     switch ($t) {
         case 'p':
             $cls = match ($b['style'] ?? '') {
@@ -57,7 +70,7 @@ function render_block(array $b, array $ctx): string
             foreach ($b['items'] ?? [] as $c) {
                 $out .= '<article class="card">'
                     . ($c['icon'] ? '<span class="ico i-' . e($c['icon']) . '" aria-hidden="true"></span>' : '')
-                    . '<h3>' . $c['title'] . '</h3><p>' . $c['text'] . '</p></article>';
+                    . "<$hx>" . $c['title'] . "</$hx><p>" . $c['text'] . '</p></article>';
             }
             return $out . "</div>\n";
 
@@ -93,7 +106,7 @@ function render_block(array $b, array $ctx): string
 
         case 'callout':
             $tone = CALLOUT_TONES[$b['tone'] ?? 'sun'] ?? 'sun';
-            return '<aside class="callout is-' . $tone . '">' . (!empty($b['title']) ? '<h3>' . $b['title'] . '</h3>' : '') . '<p>' . $b['text'] . "</p></aside>\n";
+            return '<aside class="callout is-' . $tone . '">' . (!empty($b['title']) ? "<$hx>" . $b['title'] . "</$hx>" : '') . '<p>' . $b['text'] . "</p></aside>\n";
 
         case 'buttons':
             $out = '<div class="actions">';
@@ -116,7 +129,7 @@ function render_block(array $b, array $ctx): string
                 foreach ($c['points'] ?? [] as $pt) {
                     $li .= '<li>' . $pt . '</li>';
                 }
-                $out .= '<div class="compare-col' . ($i ? ' is-next' : '') . '"><p class="eyebrow">' . e($c['label']) . '</p><h3>' . e($c['title']) . "</h3><ul class=\"list\">$li</ul></div>";
+                $out .= '<div class="compare-col' . ($i ? ' is-next' : '') . '"><p class="eyebrow">' . e($c['label']) . "</p><$hx>" . e($c['title']) . "</$hx><ul class=\"list\">$li</ul></div>";
             }
             return $out . "</div>\n";
 
@@ -129,8 +142,10 @@ function render_block(array $b, array $ctx): string
 
         case 'gallery':
             $out = '<div class="gallery">';
-            foreach ($b['images'] ?? [] as $src) {
-                $out .= '<a href="' . e(upload_url($src)) . '"><img src="' . e(upload_url($src)) . '" alt="" loading="lazy"></a>';
+            $imgs = array_values($b['images'] ?? []);
+            foreach ($imgs as $i => $src) {
+                $alt = 'Фото ' . ($i + 1) . ' з ' . count($imgs);
+                $out .= '<a href="' . e(upload_url($src)) . '" aria-label="' . e($alt . ' — відкрити у повному розмірі') . '"><img src="' . e(thumb_url($src)) . '" alt="' . e($alt) . '" loading="lazy" width="720" height="480"></a>';
             }
             return $out . "</div>\n";
 

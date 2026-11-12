@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php
 $all = pages();
 $top = array_filter($all, static fn($p) => ($p['parent'] ?? '') === '' && !in_array($p['slug'], SPECIAL_PAGES, true));

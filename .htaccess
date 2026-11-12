@@ -5,6 +5,10 @@ AddDefaultCharset UTF-8
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  # Завжди https. Розкоментуйте три рядки нижче, коли на хостингу ввімкнено SSL-сертифікат.
+  # RewriteCond %{HTTPS} !=on
+  # RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
   # службові теки й файли закриті з інтернету
   RewriteRule ^(app|content|config|tools|docs|\.git)(/|$) - [F,L]
   RewriteRule (^|/)\.(?!well-known) - [F,L]

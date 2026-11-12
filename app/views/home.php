@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php
 $n = setting('numbers', []);
 $news = news_all();
@@ -71,7 +72,7 @@ $tiles = [
     <?php if ($lead): ?>
     <div class="news-home">
       <a class="news-lead" href="<?= e(url(news_url($lead))) ?>">
-        <?php if ($cv = news_cover($lead)): ?><img src="<?= e(upload_url($cv)) ?>" alt="" loading="lazy"><?php else: ?><span class="news-ph" aria-hidden="true"></span><?php endif; ?>
+        <?php if ($cv = news_cover($lead)): ?><img src="<?= e(thumb_url($cv)) ?>" alt="" loading="lazy" width="720" height="480"><?php else: ?><span class="news-ph" aria-hidden="true"></span><?php endif; ?>
         <span class="news-body"><span class="tag is-<?= e($lead['categories'][0] ?? 'zhyttia') ?>"><?= e(tax_name('news', $lead['categories'][0] ?? 'zhyttia')) ?></span><b><?= e($lead['title']) ?></b><span class="news-ex"><?= e(excerpt(implode(' ', $lead['text']), 180)) ?></span><time datetime="<?= e(substr($lead['date'], 0, 10)) ?>"><?= e(ua_date($lead['date'])) ?></time></span>
       </a>
       <ul class="news-list">

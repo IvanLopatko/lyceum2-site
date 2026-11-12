@@ -3,6 +3,11 @@
 
 declare(strict_types=1);
 
+if (!defined('ROOT')) {
+    http_response_code(404);
+    exit;
+}
+
 const SPECIAL_PAGES = ['holovna', 'novyny'];
 
 function settings(): array
@@ -92,9 +97,13 @@ function page_by_path(array $segments): ?array
 
 /* ── Новини ── */
 
-function news_all(): array
+/** Новини, новіші першими. Чернетки показуються лише в адмінці ($withDrafts). */
+function news_all(bool $withDrafts = false): array
 {
     $all = array_values(store_list('news'));
+    if (!$withDrafts) {
+        $all = array_values(array_filter($all, static fn(array $n): bool => empty($n['draft'])));
+    }
     usort($all, static fn(array $a, array $b): int => strcmp($b['date'], $a['date']));
     return $all;
 }
@@ -117,13 +126,39 @@ function news_url(array $n): string
 
 function news_cover(array $n): string
 {
-    return $n['cover'] ?: ($n['images'][0] ?? '');
+    return ($n['cover'] ?? '') ?: ($n['images'][0] ?? '');
 }
 
+/** Усі фото новини без повторів: обкладинка перша. */
+function news_photos(array $n): array
+{
+    $all = array_merge([(string) ($n['cover'] ?? '')], array_map('strval', $n['images'] ?? []));
+    return array_values(array_unique(array_filter($all, 'strlen')));
+}
+
+/** Опис фото для програм читання з екрана (якщо редактор його вказав). */
+function news_alt(array $n, string $img, int $i = 0): string
+{
+    $a = trim((string) (($n['alts'] ?? [])[$img] ?? ''));
+    if ($a !== '') {
+        return $a;
+    }
+    // без опису від редактора: коротко, щоб програма читання з екрана не повторювала заголовок на кожному фото
+    return $i ? 'Фото ' . $i : 'Фото до новини «' . excerpt($n['title'], 80) . '»';
+}
+
+/**
+ * Номер для нової новини. Номери не використовуються повторно: якщо новину видалили,
+ * її адреса не дістанеться іншій (лічильник — у content/meta.json).
+ */
 function news_next_id(): int
 {
-    $ids = array_map(static fn(array $n): int => (int) $n['id'], news_all());
-    return ($ids ? max($ids) : 1000) + 1;
+    $ids = array_map(static fn(array $n): int => (int) $n['id'], news_all(true));
+    $meta = store_read('meta.json', []);
+    $next = max(($ids ? max($ids) : 1000), (int) ($meta['last_news_id'] ?? 0)) + 1;
+    $meta['last_news_id'] = $next;
+    store_write('meta.json', $meta);
+    return $next;
 }
 
 /* ── Документи, кадри, гуртки ── */

@@ -3,6 +3,11 @@
 
 declare(strict_types=1);
 
+if (!defined('ROOT')) {
+    http_response_code(404);
+    exit;
+}
+
 /** Екранування тексту для HTML. */
 function e(?string $s): string
 {
@@ -30,6 +35,52 @@ function asset(string $path): string
 function upload_url(string $path): string
 {
     return $path === '' ? '' : url($path);
+}
+
+/** Де лежить зменшена копія фото: «uploads/fb/a.jpg» → «uploads/thumbs/fb/a.jpg». */
+function thumb_path(string $path): string
+{
+    return str_starts_with($path, 'uploads/') ? 'uploads/thumbs/' . substr($path, 8) : '';
+}
+
+/** Адреса зменшеної копії для списків; якщо копії немає — адреса самого фото. */
+function thumb_url(string $path): string
+{
+    $t = thumb_path($path);
+    return ($t !== '' && is_file(ROOT . '/' . $t)) ? url($t) : upload_url($path);
+}
+
+/** Повна адреса з доменом — для карти сайту, robots.txt і картинок у соцмережах. */
+function abs_url(string $path = '/'): string
+{
+    $u = url($path);
+    if (preg_match('~^https?:~', $u)) {
+        return $u;
+    }
+    $site = rtrim((string) setting('site.url', ''), '/');
+    if (preg_match('~^https?://[^/]+~', $site, $m)) {
+        return $m[0] . $u;
+    }
+    $https = is_https();
+    $host = preg_replace('~[^A-Za-z0-9.:\-\[\]]~', '', (string) ($_SERVER['HTTP_HOST'] ?? 'localhost'));
+    return ($https ? 'https' : 'http') . '://' . $host . $u;
+}
+
+/**
+ * Безпечна адреса для посилань з адмінки: лише звичайні адреси
+ * (http, https, пошта, телефон, внутрішні). Усе інше стає «#».
+ */
+function safe_url(string $u): string
+{
+    $u = trim(preg_replace('~[\x00-\x1F\x7F]+~', '', $u) ?? '');
+    if ($u === '') {
+        return '';
+    }
+    if (preg_match('~^(https?://|mailto:|tel:|/|#|\?)~i', $u)) {
+        return $u;
+    }
+    // відносна адреса без схеми («storinka/», «file.pdf») — можна
+    return preg_match('~^[a-z][a-z0-9+.\-]*\s*:~i', $u) ? '#' : $u;
 }
 
 /** Множина в українській: 1 учень, 2 учні, 5 учнів. */
@@ -106,11 +157,37 @@ function current_path(): string
     return $p;
 }
 
+/**
+ * Перенаправлення — лише всередині сайту. Зворотну риску браузери читають як звичайну,
+ * тож без очищення адреса «/\чужий-сайт» вела б на чужий сайт.
+ */
 function redirect(string $to, int $code = 302): never
 {
-    header('Location: ' . url($to), true, $code);
+    $to = str_replace('\\', '/', preg_replace('~[\x00-\x1F\x7F]+~', '', $to) ?? '');
+    header('Location: ' . BASE . '/' . ltrim($to, '/'), true, $code);
     exit;
 }
+
+/** Чи з’єднання зашифроване (напряму або через проксі хостингу). */
+function is_https(): bool
+{
+    return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https'
+        || (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443;
+}
+
+/** Чи сайт відкрито на власному комп’ютері (локальний запуск), а не в інтернеті. */
+function is_local_host(): bool
+{
+    $h = strtolower((string) preg_replace('~:\d+$~', '', (string) ($_SERVER['HTTP_HOST'] ?? '')));
+    return in_array($h, ['localhost', '127.0.0.1', '[::1]'], true) || str_ends_with($h, '.localhost') || str_ends_with($h, '.test');
+}
+
+/**
+ * Маленький скрипт у <head>, що вмикає збережені налаштування доступності до першого малювання.
+ * Його відбиток вписано в правила безпеки сторінки (див. render_page), тому інші вбудовані скрипти не виконуються.
+ */
+const A11Y_BOOT = "try{var a=JSON.parse(localStorage.getItem('a11y')||'{}');var r=document.documentElement;if(a.size)r.dataset.size=a.size;if(a.space)r.dataset.space='1';if(a.contrast)r.dataset.contrast='1';}catch(e){}";
 
 /** Дозволені в тексті теги: жирний, курсив, посилання, перенос. Решту прибираємо. */
 function clean_inline(string $html): string
@@ -118,13 +195,10 @@ function clean_inline(string $html): string
     $html = strip_tags($html, '<strong><b><em><i><a><br><small><code><mark>');
     // атрибути — лише href у посиланнях
     $html = preg_replace_callback('~<(a)\b([^>]*)>~i', static function (array $m): string {
-        if (preg_match('~href\s*=\s*("|\')(.*?)\1~i', $m[2], $h)) {
-            $href = $h[2];
-            if (preg_match('~^\s*javascript:~i', $href)) {
-                $href = '#';
-            }
-            $ext = preg_match('~^https?://~', $href) ? ' target="_blank" rel="noopener"' : '';
-            return '<a href="' . htmlspecialchars($href, ENT_QUOTES) . '"' . $ext . '>';
+        if (preg_match('~href\s*=\s*("|\')(.*?)\1~is', $m[2], $h)) {
+            $href = safe_url(html_entity_decode($h[2], ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+            $ext = preg_match('~^https?://~i', $href) ? ' target="_blank" rel="noopener"' : '';
+            return '<a href="' . htmlspecialchars($href, ENT_QUOTES, 'UTF-8') . '"' . $ext . '>';
         }
         return '<a>';
     }, $html) ?? '';

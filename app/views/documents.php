@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php
 $sections = array_values(array_filter(taxonomies()['documents'], static fn(array $t): bool => documents_in($t['slug']) !== []));
 ?>

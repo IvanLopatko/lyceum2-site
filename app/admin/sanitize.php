@@ -3,6 +3,11 @@
 
 declare(strict_types=1);
 
+if (!defined('ROOT')) {
+    http_response_code(404);
+    exit;
+}
+
 const BLOCK_TYPES = [
     'p' => 'Абзац', 'h' => 'Заголовок', 'list' => 'Список', 'timeline' => 'Хронологія', 'cards' => 'Картки',
     'stats' => 'Цифри', 'faq' => 'Питання й відповіді', 'table' => 'Таблиця', 'callout' => 'Виноска',
@@ -82,7 +87,7 @@ function clean_blocks(array $blocks, bool $allowHtml): array
                 $c['text'] = ci($b['text'] ?? '');
                 break;
             case 'buttons':
-                $c['items'] = array_values(array_filter(array_map(static fn($i) => ['label' => ct($i['label'] ?? ''), 'url' => preg_match('~^\s*javascript:~i', (string) ($i['url'] ?? '')) ? '#' : trim((string) ($i['url'] ?? ''))], $items), static fn($i) => $i['label'] !== ''));
+                $c['items'] = array_values(array_filter(array_map(static fn($i) => ['label' => ct($i['label'] ?? ''), 'url' => safe_url((string) ($i['url'] ?? ''))], $items), static fn($i) => $i['label'] !== ''));
                 break;
             case 'quote':
                 $c['text'] = ci($b['text'] ?? '');
@@ -132,5 +137,6 @@ function clean_paragraphs(array $paras): array
 
 function clean_date(string $d): string
 {
-    return preg_match('~^\d{4}-\d{2}-\d{2}$~', $d) ? $d : '';
+    // лише справжні дати: 31 лютого чи 13-й місяць не приймаються
+    return preg_match('~^(\d{4})-(\d{2})-(\d{2})$~', $d, $m) && checkdate((int) $m[2], (int) $m[3], (int) $m[1]) ? $d : '';
 }

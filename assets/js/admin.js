@@ -10,6 +10,48 @@
   d.querySelectorAll('form[data-confirm]').forEach(function (f) {
     f.addEventListener('submit', function (e) { if (!window.confirm(f.dataset.confirm)) { e.preventDefault(); } });
   });
+  /* незбережені зміни: попередити, якщо людина закриває чи покидає сторінку з правками */
+  var dirty = false;
+  function markDirty() { dirty = true; }
+  d.querySelectorAll('form.edit').forEach(function (f) {
+    f.addEventListener('input', markDirty);
+    f.addEventListener('change', markDirty);
+    f.addEventListener('submit', function () { dirty = false; });
+  });
+  window.addEventListener('beforeunload', function (e) {
+    if (dirty) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  /* файли: не дати вибрати більше, ніж приймає сервер, — інакше зайві мовчки зникнуть */
+  function mb(n) { return Math.round(n / 104857.6) / 10; }
+  d.querySelectorAll('input[type=file]').forEach(function (inp) {
+    inp.addEventListener('change', function () {
+      var maxFiles = parseInt(inp.dataset.maxFiles || '0', 10);
+      var maxBytes = parseInt(inp.dataset.maxBytes || '0', 10);
+      var total = 0;
+      Array.prototype.forEach.call(inp.files, function (f) { total += f.size; });
+      var msg = '';
+      if (maxFiles && inp.files.length > maxFiles) {
+        msg = 'Ви вибрали ' + inp.files.length + ' файлів, а за один раз сервер приймає до ' + maxFiles + '. Виберіть до ' + maxFiles + ', збережіть і додайте решту наступним збереженням.';
+      } else if (maxBytes && total > maxBytes * 0.95) {
+        msg = 'Вибрані файли разом важать ' + mb(total) + ' МБ, а за один раз сервер приймає до ' + mb(maxBytes) + ' МБ. Виберіть менше файлів або зменште їх.';
+      }
+      if (msg) { window.alert(msg); inp.value = ''; }
+    });
+  });
+
+  /* чи закриті службові теки з інтернету (на справжньому хостингу, не на власному комп'ютері) */
+  var ex = d.getElementById('exposure');
+  if (ex && window.fetch && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) && !/\.(localhost|test)$/.test(location.hostname)) {
+    var urls = [];
+    try { urls = JSON.parse(ex.dataset.check || '[]'); } catch (e) { urls = []; }
+    urls.forEach(function (u) {
+      fetch(u, { cache: 'no-store', credentials: 'omit' }).then(function (r) {
+        if (r.ok) { ex.hidden = false; }
+      }).catch(function () {});
+    });
+  }
+
   /* фільтри, що відправляються одразу */
   d.querySelectorAll('.filters select').forEach(function (s) {
     s.addEventListener('change', function () { if (!s.form.querySelector('input[type=search]')) { s.form.submit(); } });
@@ -85,6 +127,8 @@
   var store = d.getElementById('blocks-json');
   var model = [];
   try { model = JSON.parse(store.value) || []; } catch (e) { model = []; }
+  if (typeof model === 'string') { try { model = JSON.parse(model); } catch (e2) { model = []; } }
+  if (!Array.isArray(model)) { model = []; }
 
   var TEMPLATES = {
     p: function () { return { type: 'p', text: '' }; },
@@ -105,7 +149,12 @@
     html: function () { return { type: 'html', html: '' }; }
   };
 
-  function sync() { store.value = JSON.stringify(model); }
+  var synced = false;
+  function sync() {
+    store.value = JSON.stringify(model);
+    if (synced) { dirty = true; }   // перша синхронізація — це просто початковий стан
+    synced = true;
+  }
 
   /* поля */
   function field(label, node, wide) {
@@ -309,7 +358,11 @@
       case 'html':
         var t = area(function () { return b.html; }, function (v) { b.html = v; }, 6);
         t.className = 'code';
+        if (!cfg.canHtml) { t.readOnly = true; }
         box.appendChild(field('HTML-код', t, true));
+        box.appendChild(el('p', 'muted small', cfg.canHtml
+          ? 'Скрипти (<script>) та обробники на кшталт onclick на сайті не виконуються: так браузер захищає відвідувачів. Відео, форми й карти вставляйте через <iframe> з YouTube, Google, Facebook або OpenStreetMap.'
+          : 'Цей блок може змінювати лише адміністратор сайту.'));
         break;
     }
   }
@@ -346,7 +399,7 @@
       host.appendChild(card);
     });
     var add = el('div', 'blk-add');
-    var sel = select(Object.keys(cfg.types).map(function (k) { return [k, cfg.types[k]]; }), function () { return 'p'; }, function () {});
+    var sel = select(Object.keys(cfg.types).filter(function (k) { return k !== 'html' || cfg.canHtml; }).map(function (k) { return [k, cfg.types[k]]; }), function () { return 'p'; }, function () {});
     add.appendChild(sel);
     add.appendChild(btn('+ Додати блок', '', function () {
       var nb = TEMPLATES[sel.value]();

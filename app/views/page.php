@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php
 /** @var array $page */
 $crumbs = [];

@@ -162,6 +162,9 @@ def rewrite_html(html: str, me: str) -> str:
     # Демонстраційна копія: не індексувати, пошук прибрати (статично не працює), емодзі-скрипт не потрібен.
     html = re.sub(r'<script[^>]*>[^<]*_wpemojiSettings.*?</script>', '', html, flags=re.S)
     html = re.sub(r'<script[^>]*id="wp-emoji-settings"[^>]*>.*?</script>', '', html, flags=re.S)
+    html = re.sub(r'<link rel="canonical"[^>]*>\n?', '', html)
+    html = re.sub(r'<meta property="og:url"[^>]*>\n?', '', html)
+    html = re.sub(r'<meta name="robots"[^>]*>\n?', '', html)
     html = html.replace('<head>', '<head>\n<meta name="robots" content="noindex, nofollow">\n'
                         '<style>.search{display:none!important}</style>', 1)
     return html

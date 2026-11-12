@@ -7,28 +7,30 @@
 :root {
   --ink: #16224A;
   --ink-2: #4E5A80;
-  --ink-3: #8E97B5;
+  --ink-3: #636D90;
   --line: #E7EBF5;
   --bg: #FFFFFF;
   --soft: #F3F8FF;
-  --blue: #1C74E8;
+  --blue: #196EE0;
+  --blue-d: #1263D0;  /* синій для дрібного тексту на блакитному тлі */
   --blue-2: #3D8BFF;
   --blue-deep: #1158C4;
   --blue-t: #E3EFFF;
   --sun: #FFD23F;
   --sun-t: #FFF5CC;
-  --sun-d: #8A6400;
+  --sun-d: #7A5800;
   --sail: #E8433A;
+  --sail-d: #C22B23;  /* червоний для тексту: читається і на білому, і на рожевому */
   --sail-t: #FFE4E0;
   --green: #1DB866;
-  --green-d: #0E8A4A;
+  --green-d: #0B7740;
   --green-t: #DDF7E8;
   --ok: #0C7A42;   --ok-t: #E2F5EA;
   --due: #8A5D00;  --due-t: #FFF1CC;
   --bad: #B8322A;  --bad-t: #FCE7E5;
 
-  --grad: linear-gradient(135deg, #1C74E8 0%, #3D8BFF 100%);
-  --grad-deep: linear-gradient(135deg, #1158C4 0%, #1C74E8 50%, #4A9BFF 100%);
+  --grad: linear-gradient(135deg, #1560D4 0%, #1B70E2 100%);
+  --grad-deep: linear-gradient(135deg, #0F52BC 0%, #186CDD 55%, #2478EC 100%);
   --grad-soft: linear-gradient(160deg, #F7FAFF 0%, #EAF2FF 100%);
   --grad-sun: linear-gradient(135deg, #FFE27A 0%, #FFD23F 100%);
   --grad-text: linear-gradient(120deg, #1158C4 0%, #2F86F5 100%);
@@ -52,7 +54,7 @@
 html[data-size="1"] { --fs: 1.12; }
 html[data-size="2"] { --fs: 1.25; }
 html[data-space="1"] { --lh: 2; }
-html[data-contrast="1"] { --ink-2: #222B4A; --ink-3: #3E4766; --line: #8E98B8; --blue: #0B4FB6; --soft: #FFFFFF; }
+html[data-contrast="1"] { --ink-2: #222B4A; --ink-3: #3E4766; --line: #8E98B8; --blue: #0B4FB6; --blue-d: #093E90; --sail-d: #9E1F18; --green-d: #085A30; --sun-d: #5E4400; --soft: #FFFFFF; --grad: linear-gradient(135deg, #0B4FB6, #0B4FB6); --grad-deep: linear-gradient(135deg, #093E90, #0B4FB6); }
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -355,7 +357,7 @@ a.doc:hover { box-shadow: inset 0 0 0 1px var(--blue-2), var(--sh); transform: t
 .card:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--blue-t), var(--sh-lift); }
 .card .ico { width: 46px; height: 46px; border-radius: 14px; background: var(--grad-soft); box-shadow: inset 0 0 0 1px var(--blue-t); -webkit-mask: none; mask: none; position: relative; margin-bottom: 8px; }
 .card .ico::after { content: ""; position: absolute; inset: 12px; background: var(--blue); -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat; }
-.card h3 { font-size: 1.05rem; }
+.card :is(h2, h3, h4) { font-size: 1.05rem; }
 .card p { color: var(--ink-2); font-size: .95rem; }
 
 /* плитки підсторінок */
@@ -396,7 +398,7 @@ tbody tr:hover td { background: #FAFCFF; }
 .callout { position: relative; padding: 20px 24px 20px 66px; border-radius: var(--r-md); background: var(--blue-t); display: grid; gap: 4px; }
 .callout::before { content: ""; position: absolute; left: 22px; top: 20px; width: 26px; height: 26px; border-radius: 50%; background: var(--grad); }
 .callout::after { content: "i"; position: absolute; left: 22px; top: 20px; width: 26px; line-height: 26px; text-align: center; color: #fff; font-weight: 700; font-family: var(--display); font-size: .8rem; }
-.callout h3 { font-size: 1rem; }
+.callout :is(h2, h3, h4) { font-size: 1rem; }
 .callout.is-note { background: var(--sun-t); }
 .callout.is-note::before { background: var(--grad-sun); }
 .callout.is-note::after { content: "!"; color: var(--ink); }
@@ -412,7 +414,7 @@ tbody tr:hover td { background: #FAFCFF; }
 .compare { display: grid; grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr); align-items: stretch; }
 .compare-col { padding: 24px 26px; border-radius: var(--r-lg); background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
 .compare-col.is-next { background: var(--grad-soft); box-shadow: inset 0 0 0 2px var(--blue-2); }
-.compare-col h3 { font-size: 1.5rem; margin-bottom: 14px; }
+.compare-col :is(h2, h3, h4) { font-size: 1.5rem; margin-bottom: 14px; }
 .compare-col .eyebrow { margin-bottom: 6px; }
 .compare-arrow { position: relative; }
 .compare-arrow::before { content: "→"; position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 38px; height: 38px; border-radius: 50%; background: var(--grad-sun); display: grid; place-items: center; font-weight: 700; }
@@ -466,7 +468,7 @@ tbody tr:hover td { background: #FAFCFF; }
 /* тривога: дві зміни */
 .shifts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
 .shift { padding: 22px 24px; border-radius: var(--r-lg); background: var(--grad-soft); }
-.shift h3 { margin-bottom: 10px; }
+.shift :is(h2, h3, h4) { margin-bottom: 10px; }
 .shift-row { display: grid; grid-template-columns: 76px 1fr; gap: 12px; padding-block: 12px; border-top: 1px solid rgba(20, 32, 74, .08); }
 .shift-row b { font-family: var(--display); font-size: 1.35rem; letter-spacing: -.03em; color: var(--blue); font-variant-numeric: tabular-nums; }
 .shift-row.is-ctrl b { color: var(--blue-deep); }
@@ -619,11 +621,11 @@ tbody tr:hover td { background: #FAFCFF; }
 .is-blue  { --tone: var(--blue);    --tone-t: var(--blue-t);  --tone-g: var(--g-blue); }
 .is-sun   { --tone: var(--sun-d);   --tone-t: var(--sun-t);   --tone-g: var(--g-sun); }
 .is-green { --tone: var(--green-d); --tone-t: var(--green-t); --tone-g: var(--g-green); }
-.is-sail  { --tone: var(--sail);    --tone-t: var(--sail-t);  --tone-g: var(--g-sail); }
+.is-sail  { --tone: var(--sail-d);  --tone-t: var(--sail-t);  --tone-g: var(--g-sail); }
 :is(.cards, .stats, .tiles, .numbers, .today, .contact-list, .resp, .team, .shifts, .myths, .clubs) > :nth-child(4n+1) { --tone: var(--blue); --tone-t: var(--blue-t); --tone-g: var(--g-blue); }
 :is(.cards, .stats, .tiles, .numbers, .today, .contact-list, .resp, .team, .shifts, .myths, .clubs) > :nth-child(4n+2) { --tone: var(--sun-d); --tone-t: var(--sun-t); --tone-g: var(--g-sun); }
 :is(.cards, .stats, .tiles, .numbers, .today, .contact-list, .resp, .team, .shifts, .myths, .clubs) > :nth-child(4n+3) { --tone: var(--green-d); --tone-t: var(--green-t); --tone-g: var(--g-green); }
-:is(.cards, .stats, .tiles, .numbers, .today, .contact-list, .resp, .team, .shifts, .myths, .clubs) > :nth-child(4n+4) { --tone: var(--sail); --tone-t: var(--sail-t); --tone-g: var(--g-sail); }
+:is(.cards, .stats, .tiles, .numbers, .today, .contact-list, .resp, .team, .shifts, .myths, .clubs) > :nth-child(4n+4) { --tone: var(--sail-d); --tone-t: var(--sail-t); --tone-g: var(--g-sail); }
 
 .card .ico { background: var(--tone-t); box-shadow: none; }
 .card .ico::after { background: var(--tone); }
@@ -638,7 +640,7 @@ tbody tr:hover td { background: #FAFCFF; }
 .person .ava { background: var(--tone-g); color: var(--tone); box-shadow: none; }
 .shift { background: var(--tone-g); }
 .shift-row b, .shift-row.is-ctrl b { color: var(--tone); }
-.shift-row.is-ctrl b { color: var(--sail); }
+.shift-row.is-ctrl b { color: var(--sail-d); }
 
 /* виноски чотирьох тонів */
 .callout.is-blue { background: var(--blue-t); }
@@ -656,18 +658,18 @@ tbody tr:hover td { background: #FAFCFF; }
 /* рубрики новин — кожна свого кольору */
 .tag.is-ogoloshennia { background: var(--sun-t); color: var(--sun-d); }
 .tag.is-hordist { background: var(--green-t); color: var(--green-d); }
-.tag.is-bezpeka-news { background: var(--sail-t); color: var(--sail); }
+.tag.is-bezpeka-news { background: var(--sail-t); color: var(--sail-d); }
 .tag.is-zhyttia { background: var(--soft); color: var(--ink-2); }
-.tag.is-profilna-shkola, .tag.is-navchannia { background: var(--blue-t); color: var(--blue); }
+.tag.is-profilna-shkola, .tag.is-navchannia { background: var(--blue-t); color: var(--blue-d); }
 
 /* міфи і факти, дорожня карта */
-.myth-m span { color: var(--sail); }
+.myth-m span { color: var(--sail-d); }
 .myth-f span { color: var(--green-d); }
 .rm-stages li.is-past::before { background: var(--green); }
 .rm-stages li.is-now { background: var(--sun-t); box-shadow: inset 0 0 0 2px var(--sun); }
 .rm-stages li.is-now::before { background: var(--sun-d); }
 .rm-m.is-now { background: linear-gradient(160deg, var(--sun-t), #fff 75%); box-shadow: inset 0 0 0 2px var(--sun), var(--sh); }
-.badge { background: var(--sail); color: #fff; }
+.badge { background: var(--sail-d); color: #fff; }
 .rm-done span { color: var(--green-d); }
 .compare-col.is-next { background: var(--g-green); box-shadow: inset 0 0 0 2px var(--green); }
 .compare-col.is-next .eyebrow { color: var(--green-d); }
@@ -699,7 +701,7 @@ tbody tr:hover td { background: #FAFCFF; }
 .stripe i:nth-child(4) { background: var(--blue); }
 .demo-bar { background: var(--sun); color: var(--ink); font-weight: 600; }
 
-.hero-eyebrow { color: var(--sail); letter-spacing: .14em; }
+.hero-eyebrow { color: var(--sail-d); letter-spacing: .14em; }
 .hero h1 { font-size: clamp(2.3rem, 5.4vw, 4rem); line-height: 1.02; }
 .hl { background: linear-gradient(100deg, var(--sail) 0%, #FF8A3D 45%, #F2B600 100%); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
 .chips li { font-weight: 600; box-shadow: inset 0 0 0 1px var(--line), var(--sh); }
@@ -744,3 +746,24 @@ tbody tr:hover td { background: #FAFCFF; }
   .today .ico { grid-row: auto; width: 38px; height: 38px; border-radius: 12px; margin-bottom: 8px; }
   .today .ico::after { inset: 9px; }
 }
+
+/* ═════════ Доступність і дрібні правки після перевірки 11.11.2026 ═════════ */
+/* дрібні підписи — не менші за 12 px */
+.badge, .myth-m span, .myth-f span, .rm-done span, .rm-k, .contact-l, .resp-a, .results .res-k { font-size: .75rem; }
+/* посилання у підвалі й верхньому рядку — зручні для пальця (щонайменше 24 px заввишки) */
+.site-footer li a { display: inline-block; padding-block: 3px; }
+.site-footer ul { gap: 4px; }
+.utility-links a { padding-block: 2px; }
+/* обкладинка новини: показуємо фото цілим, плакати не обрізаються */
+.news-cover { margin: 0; background: var(--soft); border-radius: var(--r-lg); overflow: hidden; }
+.news-cover a { display: block; }
+.news-cover img { width: auto; max-width: 100%; max-height: min(82vh, 760px); margin-inline: auto; object-fit: contain; border-radius: 0; }
+/* режим «Високий контраст»: кольоровий заголовок і числа — суцільним темним */
+html[data-contrast="1"] :is(.hl, .grad-text, .numbers b, .stat-n) { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--blue); -webkit-text-fill-color: currentColor; animation: none; }
+html[data-contrast="1"] .hl { color: var(--sail-d); }
+html[data-contrast="1"] .hero-eyebrow { color: var(--sail-d); }
+/* дрібний синій текст на блакитному тлі — темнішим синім (контраст не нижче 4,5:1) */
+.tag, .nav a:hover, .nav a[aria-current], .person-s { color: var(--blue-d); }
+.tag.is-ogoloshennia { color: var(--sun-d); } .tag.is-hordist { color: var(--green-d); } .tag.is-bezpeka-news { color: var(--sail-d); } .tag.is-zhyttia { color: var(--ink-2); }
+/* мітка рубрики в картці новини — компактна, а не на всю ширину */
+.news-body .tag { justify-self: start; }

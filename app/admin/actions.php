@@ -3,7 +3,18 @@
 
 declare(strict_types=1);
 
+if (!defined('ROOT')) {
+    http_response_code(404);
+    exit;
+}
+
 $isAdmin = ($user['role'] ?? '') === 'admin';
+
+/** Адреси, зайняті службовими розділами сайту: сторінку з такою адресою створити не можна. */
+const RESERVED_SLUGS = ['admin', 'uploads', 'assets', 'app', 'content', 'config', 'tools', 'docs', 'novyny', 'dokumenty', 'kadrovyj-sklad', 'gurtky', 'poshuk', 'index', 'robots', 'sitemap', 'favicon', 'storinka', 'rubryka'];
+
+/** Розділи, доступні лише адміністраторові. */
+const ADMIN_ONLY = ['nalashtuvannia'];
 
 function next_id(array $list, int $start = 1): int
 {
@@ -21,11 +32,20 @@ function find_index(array $list, int $id): ?int
     return null;
 }
 
+if (in_array($section, ADMIN_ONLY, true) && !$isAdmin) {
+    flash('Цей розділ доступний лише адміністраторові сайту.', 'err');
+    back('');
+}
+
 switch ($section) {
 
     /* ═════════ Огляд ═════════ */
     case '':
         if ($isPost && post('do') === 'purge') {
+            if (!$isAdmin) {
+                flash('Прибирати зразкові записи може лише адміністратор сайту.', 'err');
+                back('');
+            }
             if (post('confirm') !== 'yes') {
                 flash('Поставте позначку, що розумієте наслідки.', 'err');
                 back('');
@@ -35,12 +55,14 @@ switch ($section) {
                 $list = store_read($f, []);
                 $keep = array_values(array_filter($list, static fn($x) => empty($x['demo'])));
                 $n += count($list) - count($keep);
-                store_write($f, $keep);
+                if (count($keep) !== count($list)) {
+                    store_write($f, $keep);
+                }
             }
-            flash("Прибрано зразкових записів: $n. Їхні попередні версії збережено в історії.");
+            flash("Прибрано зразкових записів: $n. Попередній стан можна повернути в розділі «Історія змін».");
             back('');
         }
-        admin_view('dashboard');
+        admin_view('dashboard', ['isAdmin' => $isAdmin]);
 
     /* ═════════ Сторінки ═════════ */
     case 'storinky':
@@ -64,33 +86,56 @@ switch ($section) {
                 back('storinky/' . $slug);
             }
             store_delete('pages/' . $slug . '.json');
-            flash('Сторінку видалено. Копія лишилася в історії змін.');
+            flash('Сторінку видалено. Повернути її можна в розділі «Історія змін».');
             back('storinky');
         }
         if ($isPost) {
             $title = ct(post('title'));
-            if ($title === '') {
-                flash('Заголовок не може бути порожнім.', 'err');
-                admin_view('page-edit', ['page' => array_merge($page, $_POST), 'isNew' => $isNew]);
-            }
             $blocks = json_decode((string) ($_POST['blocks'] ?? '[]'), true);
+            $blocks = clean_blocks(is_array($blocks) ? $blocks : [], true);
+            if (!$isAdmin) {
+                // Блок «HTML» може додавати й змінювати лише адміністратор: у ньому дозволено будь-який код.
+                // Від редактора приймаємо тільки ті блоки, що вже є на сторінці, без жодних змін.
+                $known = [];
+                foreach ($page['blocks'] ?? [] as $b0) {
+                    if (($b0['type'] ?? '') === 'html') {
+                        $known[] = (string) ($b0['html'] ?? '');
+                    }
+                }
+                $blocks = array_values(array_filter($blocks, static fn(array $b): bool => $b['type'] !== 'html' || in_array($b['html'], $known, true)));
+            }
+            $parent = post('parent');
+            // у формі лишаємо те, що людина ввела, — щоб помилка не коштувала їй роботи
+            $draft = array_merge($page, ['title' => $title, 'lead' => ct(post('lead')), 'parent' => $parent, 'order' => (int) post('order', '0'), 'template' => isset($_POST['template']), 'blocks' => $blocks]);
+            if ($title === '') {
+                flash('Заголовок не може бути порожнім. Решту введеного збережено у формі — допишіть заголовок і натисніть «Зберегти».', 'err');
+                admin_view('page-edit', ['page' => $draft, 'isNew' => $isNew]);
+            }
             $newSlug = $isNew ? slugify(post('slug') ?: $title) : $slug;
+            if ($isNew && in_array($newSlug, RESERVED_SLUGS, true)) {
+                $newSlug .= '-storinka';
+            }
             if ($isNew && page($newSlug)) {
                 $newSlug .= '-' . substr(bin2hex(random_bytes(2)), 0, 3);
             }
-            $parent = post('parent');
-            if ($parent !== '' && (!page($parent) || $parent === $newSlug)) {
+            // розділом може бути лише сторінка верхнього рівня; розділ із підсторінками лишається нагорі
+            $parentPage = $parent !== '' ? page($parent) : null;
+            if ($parent !== '' && (!$parentPage || $parent === $newSlug || ($parentPage['parent'] ?? '') !== '' || in_array($parent, SPECIAL_PAGES, true))) {
                 $parent = '';
+            }
+            if ($parent !== '' && !$isNew && page_children($slug)) {
+                flash('У цієї сторінки є підсторінки, тому перенести її всередину іншого розділу не можна. Спершу перенесіть підсторінки.', 'err');
+                admin_view('page-edit', ['page' => array_merge($draft, ['parent' => '']), 'isNew' => $isNew]);
             }
             $data = [
                 'slug' => $newSlug,
                 'parent' => $parent,
                 'title' => $title,
-                'lead' => ct(post('lead')),
-                'order' => (int) post('order', '0'),
-                'template' => isset($_POST['template']),
+                'lead' => $draft['lead'],
+                'order' => $draft['order'],
+                'template' => $draft['template'],
                 'updated' => today(),
-                'blocks' => clean_blocks(is_array($blocks) ? $blocks : [], $isAdmin),
+                'blocks' => $blocks,
             ];
             store_write('pages/' . $newSlug . '.json', $data);
             flash('Збережено. Сторінка на сайті вже оновилась.');
@@ -111,59 +156,68 @@ switch ($section) {
             back('novyny');
         }
         if ($isPost && post('do') === 'delete' && !$isNew) {
+            $photos = news_photos($item);
             store_delete('news/' . (int) $id . '.json');
-            flash('Новину видалено. Копія лишилася в історії змін.');
+            foreach ($photos as $ph) {
+                trash_upload($ph);
+            }
+            flash('Новину видалено. Повернути її разом із фото можна протягом 30 днів у розділі «Історія змін».');
             back('novyny');
         }
         if ($isPost) {
             $errors = [];
             $paras = json_decode((string) ($_POST['text_json'] ?? '[]'), true);
             $item['title'] = ct(post('title'));
-            $item['date'] = preg_match('~^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}~', post('date')) ? str_replace('T', ' ', substr(post('date'), 0, 16)) : date('Y-m-d H:i');
+            $item['date'] = preg_match('~^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}~', post('date')) && strtotime(post('date')) ? str_replace('T', ' ', substr(post('date'), 0, 16)) : date('Y-m-d H:i');
             $cats = array_map('strval', (array) ($_POST['categories'] ?? []));
             $known = array_column(taxonomies()['news'], 'slug');
             $item['categories'] = array_values(array_intersect($cats, $known)) ?: ['zhyttia'];
             $item['text'] = clean_paragraphs(is_array($paras) ? $paras : []);
             $item['excerpt'] = ct(post('excerpt'));
-            $item['source'] = filter_var(post('source'), FILTER_VALIDATE_URL) ? post('source') : '';
-            // фото: прибрати позначені, додати нові
-            $remove = array_map('strval', (array) ($_POST['remove'] ?? []));
-            $item['images'] = array_values(array_filter($item['images'], static fn($i) => !in_array($i, $remove, true)));
-            if (in_array($item['cover'], $remove, true)) {
-                $item['cover'] = '';
+            $item['source'] = preg_match('~^https?://~i', post('source')) && filter_var(post('source'), FILTER_VALIDATE_URL) ? post('source') : '';
+            $item['draft'] = isset($_POST['draft']);
+            if ($item['title'] === '') {
+                flash('Заголовок не може бути порожнім. Якщо ви додавали фото, виберіть їх ще раз.', 'err');
+                admin_view('news-edit', ['item' => $item, 'isNew' => $isNew]);
             }
+            // фото: усі в одному списку (обкладинка — одна з них), прибрати позначені, додати нові
+            $photos = news_photos($item);
+            $remove = array_values(array_intersect(array_map('strval', (array) ($_POST['remove'] ?? [])), $photos));
+            $photos = array_values(array_diff($photos, $remove));
             foreach (uploaded_files('photos') as $f) {
                 try {
-                    $item['images'][] = save_image($f, 'news', 1600, $item['title'] ?: 'novyna');
+                    $photos[] = save_image($f, 'news', 1600, $item['title'] ?: 'novyna');
                 } catch (RuntimeException $ex) {
                     $errors[] = $ex->getMessage();
                 }
             }
             $cover = post('cover');
-            if ($cover !== '' && in_array($cover, $item['images'], true)) {
+            if (in_array($cover, $photos, true)) {
                 $item['cover'] = $cover;
+            } elseif (!in_array($item['cover'] ?? '', $photos, true)) {
+                $item['cover'] = $photos[0] ?? '';
             }
-            if ($item['cover'] === '' && $item['images']) {
-                $item['cover'] = $item['images'][0];
-            }
-            if ($item['title'] === '') {
-                $errors[] = 'Заголовок не може бути порожнім.';
-            }
-            if ($errors) {
-                flash(implode(' ', $errors), 'err');
-                if ($item['title'] === '') {
-                    admin_view('news-edit', ['item' => $item, 'isNew' => $isNew]);
+            $item['images'] = $photos;
+            // описи фото для програм читання з екрана
+            $alts = [];
+            foreach ((array) ($_POST['alt'] ?? []) as $ph => $txt) {
+                $txt = mb_substr(ct($txt), 0, 200);
+                if ($txt !== '' && in_array((string) $ph, $photos, true)) {
+                    $alts[(string) $ph] = $txt;
                 }
             }
+            $item['alts'] = $alts ?: new stdClass();
             if ($isNew) {
                 $item['id'] = news_next_id();
             }
             store_write('news/' . $item['id'] . '.json', $item);
             foreach ($remove as $r) {
-                delete_upload($r);
+                trash_upload($r);
             }
-            if (!$errors) {
-                flash('Новину збережено.');
+            if ($errors) {
+                flash('Новину збережено, але не всі фото додались: ' . implode(' ', array_unique($errors)), 'err');
+            } else {
+                flash($item['draft'] ? 'Чернетку збережено. На сайті її ще не видно.' : 'Новину збережено.');
             }
             back('novyny/' . $item['id']);
         }
@@ -186,10 +240,14 @@ switch ($section) {
         if ($isPost && post('do') === 'delete' && !$isNew) {
             array_splice($docs, $idx, 1);
             store_write('documents.json', $docs);
-            flash('Документ прибрано з реєстру. Сам файл лишився на сервері й у історії змін.');
+            if (!empty($doc['file'])) {
+                trash_upload($doc['file']);
+            }
+            flash('Документ прибрано з реєстру, файл за посиланням більше не відкривається. Повернути можна протягом 30 днів у розділі «Історія змін».');
             back('dokumenty');
         }
         if ($isPost) {
+            $oldFile = (string) ($doc['file'] ?? '');
             $doc['title'] = ct(post('title'));
             $known = array_column(taxonomies()['documents'], 'slug');
             $doc['sections'] = array_values(array_intersect(array_map('strval', (array) ($_POST['sections'] ?? [])), $known));
@@ -198,6 +256,10 @@ switch ($section) {
             $doc['published'] = clean_date(post('published'));
             $doc['valid'] = post('valid') === 'archive' ? 'archive' : 'current';
             $doc['demo'] = isset($_POST['demo']);
+            if ($doc['title'] === '') {
+                flash('Назва документа не може бути порожньою.', 'err');
+                admin_view('doc-edit', ['doc' => $doc, 'isNew' => $isNew]);
+            }
             if (isset($_POST['remove_file'])) {
                 $doc['file'] = '';
             }
@@ -209,12 +271,9 @@ switch ($section) {
                     }
                 } catch (RuntimeException $ex) {
                     flash($ex->getMessage(), 'err');
+                    $doc['file'] = $oldFile;
                     admin_view('doc-edit', ['doc' => $doc, 'isNew' => $isNew]);
                 }
-            }
-            if ($doc['title'] === '') {
-                flash('Назва документа не може бути порожньою.', 'err');
-                admin_view('doc-edit', ['doc' => $doc, 'isNew' => $isNew]);
             }
             if ($isNew) {
                 $doc['id'] = next_id($docs, 1);
@@ -223,6 +282,9 @@ switch ($section) {
                 $docs[$idx] = $doc;
             }
             store_write('documents.json', $docs);
+            if ($oldFile !== '' && $oldFile !== $doc['file']) {
+                trash_upload($oldFile);
+            }
             flash('Документ збережено.');
             back('dokumenty/' . $doc['id']);
         }
@@ -238,16 +300,21 @@ switch ($section) {
         $isNew = $id === 'novyi';
         $idx = $isNew ? null : find_index($list, (int) $id);
         if (!$isNew && $idx === null) {
+            flash('Такого запису немає.', 'err');
             back('kadry');
         }
         $p = $isNew ? ['id' => 0, 'name' => '', 'position' => '', 'subjects' => '', 'group' => 'vchyteli', 'order' => 100, 'photo' => '', 'demo' => false] : $list[$idx];
         if ($isPost && post('do') === 'delete' && !$isNew) {
             array_splice($list, $idx, 1);
             store_write('staff.json', $list);
-            flash('Запис видалено.');
+            if (!empty($p['photo'])) {
+                trash_upload($p['photo']);
+            }
+            flash('Запис видалено разом із фото. Повернути можна протягом 30 днів у розділі «Історія змін».');
             back('kadry');
         }
         if ($isPost) {
+            $oldPhoto = (string) ($p['photo'] ?? '');
             $p['name'] = ct(post('name'));
             $p['position'] = ct(post('position'));
             $p['subjects'] = ct(post('subjects'));
@@ -255,19 +322,20 @@ switch ($section) {
             $p['group'] = in_array(post('group'), $groups, true) ? post('group') : 'vchyteli';
             $p['order'] = (int) post('order', '100');
             $p['demo'] = isset($_POST['demo']);
+            if ($p['name'] === '') {
+                flash('Вкажіть прізвище, ім’я та по батькові.', 'err');
+                admin_view('staff-edit', ['p' => $p, 'isNew' => $isNew]);
+            }
             if (isset($_POST['remove_photo'])) {
                 $p['photo'] = '';
             }
+            $photoError = '';
             foreach (uploaded_files('photo') as $f) {
                 try {
                     $p['photo'] = save_image($f, 'staff', 800, $p['name'] ?: 'foto');
                 } catch (RuntimeException $ex) {
-                    flash($ex->getMessage(), 'err');
+                    $photoError = $ex->getMessage();
                 }
-            }
-            if ($p['name'] === '') {
-                flash('Вкажіть прізвище, ім’я та по батькові.', 'err');
-                admin_view('staff-edit', ['p' => $p, 'isNew' => $isNew]);
             }
             if ($isNew) {
                 $p['id'] = next_id($list, 1);
@@ -276,7 +344,10 @@ switch ($section) {
                 $list[$idx] = $p;
             }
             store_write('staff.json', $list);
-            flash('Збережено.');
+            if ($oldPhoto !== '' && $oldPhoto !== $p['photo']) {
+                trash_upload($oldPhoto);
+            }
+            $photoError !== '' ? flash('Запис збережено, але фото не додалось: ' . $photoError, 'err') : flash('Збережено.');
             back('kadry/' . $p['id']);
         }
         admin_view('staff-edit', ['p' => $p, 'isNew' => $isNew]);
@@ -291,13 +362,14 @@ switch ($section) {
         $isNew = $id === 'novyi';
         $idx = $isNew ? null : find_index($list, (int) $id);
         if (!$isNew && $idx === null) {
+            flash('Такого гуртка немає.', 'err');
             back('gurtky');
         }
         $c = $isNew ? ['id' => 0, 'title' => '', 'leader' => '', 'classes' => '', 'day' => '', 'time' => '', 'room' => '', 'text' => '', 'demo' => false] : $list[$idx];
         if ($isPost && post('do') === 'delete' && !$isNew) {
             array_splice($list, $idx, 1);
             store_write('clubs.json', $list);
-            flash('Гурток видалено.');
+            flash('Гурток видалено. Повернути можна в розділі «Історія змін».');
             back('gurtky');
         }
         if ($isPost) {
@@ -321,13 +393,15 @@ switch ($section) {
         }
         admin_view('club-edit', ['c' => $c, 'isNew' => $isNew]);
 
-    /* ═════════ Налаштування ═════════ */
+    /* ═════════ Налаштування (лише адміністратор) ═════════ */
     case 'nalashtuvannia':
         if ($isPost) {
             $s = settings();
             foreach (['name', 'motto', 'full_name', 'founded'] as $k) {
                 $s['site'][$k] = ct(post('site_' . $k));
             }
+            $siteUrl = rtrim(post('site_url'), '/');
+            $s['site']['url'] = preg_match('~^https?://[A-Za-z0-9.\-]+(:\d+)?(/[^\s]*)?$~', $siteUrl) ? $siteUrl : '';
             $s['site']['demo_bar'] = isset($_POST['site_demo_bar']);
             foreach (['phone', 'phone_extra', 'hours', 'reception', 'public_info', 'email', 'facebook'] as $k) {
                 $s['contacts'][$k] = ct(post('contacts_' . $k));
@@ -340,6 +414,12 @@ switch ($section) {
                     $b[] = ['name' => $n, 'address' => $a];
                 }
             }
+            // посилання на Facebook — лише звичайна веб-адреса
+            $fb = (string) ($s['contacts']['facebook'] ?? '');
+            if ($fb !== '' && !preg_match('~^https?://~i', $fb)) {
+                $fb = preg_match('~^[a-z0-9.-]+\.[a-z]{2,}(/|$)~i', $fb) ? 'https://' . $fb : '';
+            }
+            $s['contacts']['facebook'] = $fb;
             $s['contacts']['buildings'] = $b;
             foreach (['pupils', 'pupils_date', 'classes', 'classes_date', 'staff', 'staff_date', 'shelters', 'shelters_note'] as $k) {
                 $s['numbers'][$k] = ct(post('numbers_' . $k));
@@ -361,25 +441,61 @@ switch ($section) {
         }
         admin_view('settings');
 
+    /* ═════════ Історія змін: попередні версії та видалене ═════════ */
+    case 'istoriia':
+        $rel = (string) ($_GET['f'] ?? ($_POST['f'] ?? ''));
+        $okRel = preg_match('~^(pages/[a-z0-9-]+|news/\d+|documents|staff|clubs|settings)\.json$~', $rel) === 1;
+        if (!$isAdmin && $rel === 'settings.json') {
+            $okRel = false;
+        }
+        if ($isPost && post('do') === 'restore') {
+            $data = $okRel ? store_version($rel, post('v')) : null;
+            if (!is_array($data)) {
+                flash('Не вдалося знайти цю версію.', 'err');
+                back('istoriia');
+            }
+            store_write($rel, $data);
+            $missing = 0;
+            foreach (uploads_in($data) as $u) {
+                if (!restore_upload($u)) {
+                    $missing++;
+                }
+            }
+            flash('Версію відновлено.' . ($missing ? " Не вдалося повернути файлів: $missing (минуло понад 30 днів або їх прибрали вручну)." : ''));
+            if (preg_match('~^pages/([a-z0-9-]+)\.json$~', $rel, $m)) {
+                back('storinky/' . $m[1]);
+            }
+            if (preg_match('~^news/(\d+)\.json$~', $rel, $m)) {
+                back('novyny/' . $m[1]);
+            }
+            back('istoriia/?f=' . rawurlencode($rel));
+        }
+        admin_view('history', ['rel' => $okRel ? $rel : '', 'isAdmin' => $isAdmin]);
+
     /* ═════════ Обліковий запис ═════════ */
     case 'oblikovyi-zapys':
         if ($isPost && post('do') === 'password') {
             if (!password_verify((string) ($_POST['old'] ?? ''), $user['hash'])) {
                 flash('Поточний пароль неправильний.', 'err');
-            } elseif ($p = password_problem((string) ($_POST['new'] ?? ''))) {
+            } elseif ($p = password_problem((string) ($_POST['new'] ?? ''), (string) $user['login'])) {
                 flash($p, 'err');
             } elseif (($_POST['new'] ?? '') !== ($_POST['new2'] ?? '')) {
                 flash('Нові паролі не збігаються.', 'err');
             } else {
                 $users = admin_users();
+                $pv = 0;
                 foreach ($users as &$u) {
                     if ($u['login'] === $user['login']) {
                         $u['hash'] = password_hash((string) $_POST['new'], PASSWORD_DEFAULT);
+                        $u['pv'] = $pv = (int) ($u['pv'] ?? 0) + 1;
                     }
                 }
                 unset($u);
                 admin_save_users($users);
-                flash('Пароль змінено.');
+                // цей сеанс лишається, усі інші (на інших пристроях) завершуються
+                $_SESSION['pv'] = $pv;
+                session_regenerate_id(true);
+                flash('Пароль змінено. На інших пристроях доведеться ввійти знову.');
             }
             back('oblikovyi-zapys');
         }
@@ -390,10 +506,10 @@ switch ($section) {
                 flash('Логін: 3–32 латинські літери, цифри, крапка, дефіс.', 'err');
             } elseif (in_array($login, array_column($users, 'login'), true)) {
                 flash('Такий логін уже є.', 'err');
-            } elseif ($p = password_problem((string) ($_POST['password'] ?? ''))) {
+            } elseif ($p = password_problem((string) ($_POST['password'] ?? ''), $login)) {
                 flash($p, 'err');
             } else {
-                $users[] = ['login' => $login, 'name' => ct(post('name')) ?: $login, 'role' => post('role') === 'admin' ? 'admin' : 'editor', 'hash' => password_hash((string) $_POST['password'], PASSWORD_DEFAULT)];
+                $users[] = ['login' => $login, 'name' => ct(post('name')) ?: $login, 'role' => post('role') === 'admin' ? 'admin' : 'editor', 'hash' => password_hash((string) $_POST['password'], PASSWORD_DEFAULT), 'pv' => 0];
                 admin_save_users($users);
                 flash('Обліковий запис додано. Передайте пароль людині особисто, не в чаті.');
             }

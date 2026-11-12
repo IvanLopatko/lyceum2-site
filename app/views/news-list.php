@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php
 /** @var string $cat @var int $pageNo */
 $per = 12;
@@ -9,8 +10,8 @@ $base = $cat ? '/novyny/rubryka/' . $cat . '/' : '/novyny/';
 $pageUrl = static fn(int $n): string => $n === 1 ? $base : $base . 'storinka/' . $n . '/';
 ?>
 <section class="page-head"><div class="wrap">
-  <nav class="crumbs" aria-label="Ви тут"><a href="<?= e(url('/')) ?>">Головна</a><?php if ($cat): ?><a href="<?= e(url('/novyny/')) ?>">Новини</a><?php endif; ?><span aria-current="page"><?= e($title) ?></span></nav>
-  <h1><?= e($title) ?></h1>
+  <nav class="crumbs" aria-label="Ви тут"><a href="<?= e(url('/')) ?>">Головна</a><?php if ($cat): ?><a href="<?= e(url('/novyny/')) ?>">Новини</a><?php endif; ?><span aria-current="page"><?= e($heading ?? $title) ?></span></nav>
+  <h1><?= e($heading ?? $title) ?></h1>
   <p class="lead">Події, оголошення й досягнення ліцею. Дописи переносимо зі спільноти ліцею у Facebook.</p>
   <nav class="chips chips-nav" aria-label="Рубрики">
     <a href="<?= e(url('/novyny/')) ?>"<?= $cat === '' ? ' aria-current="page"' : '' ?>>Усі</a>
@@ -24,7 +25,7 @@ $pageUrl = static fn(int $n): string => $n === 1 ? $base : $base . 'storinka/' .
   <ul class="news-grid">
     <?php foreach ($items as $n): ?>
       <li><a href="<?= e(url(news_url($n))) ?>">
-        <?php if ($cv = news_cover($n)): ?><img src="<?= e(upload_url($cv)) ?>" alt="" loading="lazy"><?php else: ?><span class="news-ph" aria-hidden="true"></span><?php endif; ?>
+        <?php if ($cv = news_cover($n)): ?><img src="<?= e(thumb_url($cv)) ?>" alt="" loading="lazy" width="720" height="480"><?php else: ?><span class="news-ph" aria-hidden="true"></span><?php endif; ?>
         <span class="news-body"><span class="tag is-<?= e($n['categories'][0] ?? 'zhyttia') ?>"><?= e(tax_name('news', $n['categories'][0] ?? 'zhyttia')) ?></span><b><?= e($n['title']) ?></b><time datetime="<?= e(substr($n['date'], 0, 10)) ?>"><?= e(ua_date($n['date'])) ?></time></span>
       </a></li>
     <?php endforeach; ?>

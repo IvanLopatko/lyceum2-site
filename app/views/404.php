@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <section class="page-head"><div class="wrap">
   <h1>Такої сторінки немає</h1>
   <p class="lead">Можливо, її перенесли під час оновлення сайту. Скористайтеся пошуком або картою сайту.</p>

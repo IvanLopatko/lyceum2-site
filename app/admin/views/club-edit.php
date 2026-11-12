@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php /** @var array $c @var bool $isNew */ ?>
 <header class="head"><div><p class="crumb"><a href="<?= e(url('/admin/gurtky/')) ?>">Гуртки</a></p><h1><?= $isNew ? 'Новий гурток' : e($c['title']) ?></h1></div></header>
 <form method="post" class="edit">

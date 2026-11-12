@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php /** @var bool $isAdmin */ ?>
 <header class="head"><h1>Обліковий запис</h1></header>
 <section class="card">
@@ -23,8 +24,26 @@
     <label>Ім’я<input name="name" required></label>
     <label>Логін (латиницею)<input name="login" pattern="[a-z0-9._-]{3,32}" required></label>
     <label>Тимчасовий пароль<input type="password" name="password" minlength="10" autocomplete="new-password" required></label>
-    <label>Роль<select name="role"><option value="editor">Редактор — новини, сторінки, документи</option><option value="admin">Адміністратор — ще й доступи</option></select></label>
+    <label>Роль<select name="role"><option value="editor">Редактор — сторінки, новини, документи, кадри, гуртки</option><option value="admin">Адміністратор — ще й налаштування сайту, доступи, прибирання зразків</option></select></label>
     <div class="wide"><button class="btn" type="submit">Додати</button></div>
   </form>
 </section>
 <?php endif; ?>
+<?php
+$log = array_reverse(login_history());
+if (!$isAdmin) {
+    $log = array_filter($log, static fn($r) => !empty($r['ok']) && ($r['login'] ?? '') === $user['login']);
+}
+$log = array_slice(array_values($log), 0, 30);
+?>
+<section class="card">
+  <h2>Журнал входів</h2>
+  <p class="muted"><?= $isAdmin ? 'Останні входи в адмінку й невдалі спроби, новіші зверху.' : 'Ваші останні входи в адмінку, новіші зверху.' ?> Якщо бачите вхід, якого не робили, — одразу змініть пароль: усі інші сеанси завершаться.</p>
+  <?php if (!$log): ?><p class="muted">Записів ще немає.</p><?php else: ?>
+  <ul class="rows">
+    <?php foreach ($log as $r): $ok = !empty($r['ok']); ?>
+      <li><div class="row-static"><span><?= e(ua_date(date('Y-m-d', (int) $r['t'])) . ', ' . date('H:i', (int) $r['t'])) ?> <small class="muted"><?= e((($r['login'] ?? '') !== '' ? $r['login'] : 'логін не розпізнано') . ' · адреса ' . ($r['ip'] ?? '')) ?></small></span><em class="pill <?= $ok ? 'is-ok' : 'is-late' ?>"><?= $ok ? 'вхід' : 'невдала спроба' ?></em></div></li>
+    <?php endforeach; ?>
+  </ul>
+  <?php endif; ?>
+</section>

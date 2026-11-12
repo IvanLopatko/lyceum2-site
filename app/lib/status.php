@@ -9,6 +9,11 @@
 
 declare(strict_types=1);
 
+if (!defined('ROOT')) {
+    http_response_code(404);
+    exit;
+}
+
 const PUBLISH_DEADLINE_DAYS = 10;
 const FRESH_DAYS = 30;
 

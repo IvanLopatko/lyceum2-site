@@ -1,3 +1,4 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php $s = settings(); $f = static fn(string $g, string $k): string => e((string) ($s[$g][$k] ?? '')); ?>
 <header class="head"><h1>Налаштування</h1></header>
 <form method="post" class="edit">
@@ -8,7 +9,8 @@
     <label>Девіз<input name="site_motto" value="<?= $f('site', 'motto') ?>"></label>
     <label class="wide">Повна назва<input name="site_full_name" value="<?= $f('site', 'full_name') ?>"></label>
     <label>Рік заснування<input name="site_founded" value="<?= $f('site', 'founded') ?>"></label>
-    <label class="check"><input type="checkbox" name="site_demo_bar"<?= !empty($s['site']['demo_bar']) ? ' checked' : '' ?>> Показувати смугу «Зразок сайту», поки є зразкові дані</label>
+    <label>Адреса сайту (з https://)<input name="site_url" type="url" value="<?= $f('site', 'url') ?>" placeholder="https://lyceum2.example.ua"><small class="muted">Потрібна для карти сайту й посилань у соцмережах. Заповніть після запуску на справжньому домені.</small></label>
+    <label class="check wide"><input type="checkbox" name="site_demo_bar"<?= !empty($s['site']['demo_bar']) ? ' checked' : '' ?>> Показувати смугу «Зразок сайту», поки є зразкові дані. Поки смуга показується, сайт закритий від пошуковиків</label>
   </div>
   <h2 class="sub">Контакти</h2>
   <div class="fields">

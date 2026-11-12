@@ -1,10 +1,11 @@
+<?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php /** @var array $p @var bool $isNew */ ?>
 <header class="head"><div><p class="crumb"><a href="<?= e(url('/admin/kadry/')) ?>">Кадри</a></p><h1><?= $isNew ? 'Нова людина' : e($p['name']) ?></h1></div></header>
 <form method="post" enctype="multipart/form-data" class="edit">
   <?= csrf_field() ?>
   <div class="person-edit">
     <div class="photo-box"><?php if ($p['photo']): ?><img src="<?= e(upload_url($p['photo'])) ?>" alt=""><label class="check"><input type="checkbox" name="remove_photo"> прибрати фото</label><?php else: ?><span class="thumb big"></span><?php endif; ?>
-      <label class="upload">Фото (JPG/PNG)<input type="file" name="photo" accept="image/jpeg,image/png,image/webp"></label></div>
+      <label class="upload">Фото (JPG/PNG)<input type="file" name="photo" data-max-bytes="<?= (int) min(upload_limits()['post'], upload_limits()['file']) ?>" accept="image/jpeg,image/png,image/webp"></label></div>
     <div class="fields">
       <label class="wide">Прізвище, ім’я, по батькові<input name="name" value="<?= e($p['name']) ?>" required></label>
       <label class="wide">Посада<input name="position" value="<?= e($p['position']) ?>" placeholder="Вчитель"></label>

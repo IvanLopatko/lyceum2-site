@@ -8,6 +8,11 @@
 
 declare(strict_types=1);
 
+if (!defined('ROOT')) {
+    http_response_code(404);
+    exit;
+}
+
 require APP . '/admin/auth.php';
 require APP . '/admin/upload.php';
 require APP . '/admin/sanitize.php';
@@ -57,13 +62,13 @@ if (!admin_users()) {
     if ($isPost) {
         csrf_check();
         if (!hash_equals($token, post('token'))) {
-            $error = 'Код не збігається. Візьміть його з файлу config/setup-token.txt на сервері.';
+            $error = 'Код не збігається. Візьміть його з другого рядка файлу config/setup-token.php на сервері.';
         } elseif (!preg_match('~^[a-z0-9._-]{3,32}$~', post('login'))) {
             $error = 'Логін: 3–32 латинські літери, цифри, крапка, дефіс.';
-        } elseif ($p = password_problem((string) ($_POST['password'] ?? ''))) {
+        } elseif ($p = password_problem((string) ($_POST['password'] ?? ''), post('login'))) {
             $error = $p;
         } else {
-            admin_save_users([['login' => post('login'), 'name' => post('name') ?: post('login'), 'role' => 'admin', 'hash' => password_hash((string) $_POST['password'], PASSWORD_DEFAULT)]]);
+            admin_save_users([['login' => post('login'), 'name' => ct(post('name')) ?: post('login'), 'role' => 'admin', 'hash' => password_hash((string) $_POST['password'], PASSWORD_DEFAULT), 'pv' => 0]]);
             @unlink(SETUP_TOKEN_FILE);
             flash('Обліковий запис створено. Увійдіть.');
             back('');
@@ -96,6 +101,12 @@ if (!$user) {
 }
 
 if ($isPost) {
+    // Якщо форма з файлами більша, ніж приймає сервер, PHP відкидає її цілком — пояснюємо це по-людськи.
+    if (!$_POST && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
+        $lim = upload_limits();
+        flash('Сервер не прийняв форму: файли разом важать більше, ніж дозволено за один раз (' . round($lim['post'] / 1048576) . ' МБ). Додавайте фото меншими порціями або зменште файли. Нічого не збережено.', 'err');
+        redirect(current_path());
+    }
     csrf_check();
 }
 

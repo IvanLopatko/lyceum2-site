@@ -160,7 +160,16 @@ legend { font-weight: 600; font-size: .88rem; color: var(--ink-2); margin-bottom
 .auth p { margin: 0; }
 
 @media (max-width: 860px) {
-  body { grid-template-columns: 1fr; }
+  body { grid-template-columns: minmax(0, 1fr); }
+  .side, .main { min-width: 0; max-width: 100%; }
+  .main { padding-inline: 14px; }
+  .head { flex-wrap: wrap; gap: 10px; }
+  .rows li a, .row-static { flex-wrap: wrap; }
+  .rows li a small { margin-left: 0; width: 100%; }
+  .savebar { flex-wrap: wrap; }
+  .filters { flex-wrap: wrap; }
+  .filters > * { flex: 1 1 140px; min-width: 0; }
+  table, .table-edit { max-width: 100%; }
   .side { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; padding: 10px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
   .side nav { display: flex; overflow-x: auto; gap: 2px; width: 100%; order: 3; }
   .side nav a { white-space: nowrap; padding: 8px 10px; }
@@ -171,3 +180,9 @@ legend { font-weight: 600; font-size: .88rem; color: var(--ink-2); margin-bottom
   .person-edit { grid-template-columns: 1fr; }
   .table-edit.is-4 .tr { grid-template-columns: 1fr 1fr; }
 }
+
+/* описи фото, історія змін */
+.photos .alt { font-size: .8rem; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); width: 100%; min-width: 0; }
+.rows .row-static form { margin-left: auto; }
+.flash b { font-weight: 700; }
+.flash code { background: rgba(255, 255, 255, .6); }
