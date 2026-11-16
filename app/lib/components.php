@@ -28,7 +28,9 @@ const PAGE_ICONS = [
 
 function page_icon(string $slug): string
 {
-    return PAGE_ICONS[$slug] ?? 'doc';
+    // значок, обраний у редакторі сторінки, має перевагу над типовим
+    $own = preg_replace('~[^a-z]~', '', (string) (page($slug)['icon'] ?? ''));
+    return $own !== '' ? $own : (PAGE_ICONS[$slug] ?? 'doc');
 }
 
 function component_documents(array $a, array $ctx = []): string
@@ -120,7 +122,11 @@ function component_responsible(array $a = [], array $ctx = []): string
 
 function component_map(array $a = [], array $ctx = []): string
 {
-    return '<div class="map"><iframe title="Карта: головний корпус ліцею" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=30.1909%2C46.4829%2C30.2109%2C46.4929&amp;layer=mapnik&amp;marker=46.487948%2C30.200875"></iframe></div>';
+    $m = map_point();
+    $box = [$m['lon'] - 0.01, $m['lat'] - 0.005, $m['lon'] + 0.01, $m['lat'] + 0.005];
+    $src = 'https://www.openstreetmap.org/export/embed.html?bbox=' . rawurlencode(implode(',', array_map(static fn(float $v): string => number_format($v, 4, '.', ''), $box)))
+        . '&layer=mapnik&marker=' . rawurlencode(number_format($m['lat'], 6, '.', '') . ',' . number_format($m['lon'], 6, '.', ''));
+    return '<div class="map"><iframe title="' . e($m['title']) . '" loading="lazy" src="' . e($src) . '"></iframe></div>';
 }
 
 function component_countdown(array $a = [], array $ctx = []): string
@@ -177,14 +183,10 @@ function component_roadmap(array $a = [], array $ctx = []): string
 function component_alarm_shifts(array $a = [], array $ctx = []): string
 {
     $hx = 'h' . (int) ($ctx['sub'] ?? 3);
-    $rows = [
-        ['Перша зміна', '07:30', '09:00', 'Якщо тривога триває до 07:30 — учні залишаються вдома й не вирушають до ліцею.', 'Якщо тривога триває до 09:00 — навчання першої зміни переходить у дистанційний формат.'],
-        ['Друга зміна', '11:30', '13:00', 'Якщо тривога триває до 11:30 — учні залишаються вдома. Початок занять другої зміни — о 12:00, якщо адміністрація не повідомила інше.', 'Якщо тривога триває до 13:00 — навчання другої зміни переходить у дистанційний формат.'],
-    ];
     $out = '<div class="shifts">';
-    foreach ($rows as [$name, $home, $ctrl, $t1, $t2]) {
-        $out .= '<div class="shift"><' . $hx . '>' . $name . '</' . $hx . '><div class="shift-row"><b>' . $home . '</b><p>' . $t1 . '</p></div>'
-            . '<div class="shift-row is-ctrl"><b>' . $ctrl . '</b><p><strong>Контрольний час.</strong> ' . $t2 . '</p></div></div>';
+    foreach (alarm_rows() as $r) {
+        $out .= '<div class="shift"><' . $hx . '>' . e($r['name'] ?? '') . '</' . $hx . '><div class="shift-row"><b>' . e($r['home'] ?? '') . '</b><p>' . e($r['text_home'] ?? '') . '</p></div>'
+            . '<div class="shift-row is-ctrl"><b>' . e($r['ctrl'] ?? '') . '</b><p><strong>Контрольний час.</strong> ' . e($r['text_ctrl'] ?? '') . '</p></div></div>';
     }
     return $out . '</div>';
 }

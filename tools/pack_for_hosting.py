@@ -23,7 +23,7 @@ def wanted(rel: pathlib.PurePosixPath) -> bool:
         return False
     if parts[0] == "config":
         return len(parts) == 2 and rel.name in KEEP_IN_CONFIG
-    if parts[0] == "content" and len(parts) > 1 and parts[1] in {".history", ".trash", ".write.lock"}:
+    if parts[0] == "content" and len(parts) > 1 and parts[1].startswith(".") and parts[1] != ".htaccess":
         return False
     if rel.suffix in {".lock", ".log"} or ".tmp" in rel.name:
         return False

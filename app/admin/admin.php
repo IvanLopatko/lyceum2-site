@@ -68,13 +68,51 @@ if (!admin_users()) {
         } elseif ($p = password_problem((string) ($_POST['password'] ?? ''), post('login'))) {
             $error = $p;
         } else {
-            admin_save_users([['login' => post('login'), 'name' => ct(post('name')) ?: post('login'), 'role' => 'admin', 'hash' => password_hash((string) $_POST['password'], PASSWORD_DEFAULT), 'pv' => 0]]);
+            admin_save_users([['login' => post('login'), 'name' => ct(post('name')) ?: post('login'), 'role' => 'owner', 'hash' => password_hash((string) $_POST['password'], PASSWORD_DEFAULT), 'pv' => 0]]);
             @unlink(SETUP_TOKEN_FILE);
-            flash('Обліковий запис створено. Увійдіть.');
+            flash('Обліковий запис головного адміністратора створено. Увійдіть.');
             back('');
         }
     }
     admin_view('setup', ['error' => $error, 'bare' => true]);
+}
+
+/* ── Відновлення доступу головного адміністратора (на сервері створено файл config/recover) ── */
+if (recover_requested() && !current_user() && ($_GET['vhid'] ?? '') === '' && !($isPost && isset($_POST['login']))) {
+    $token = recover_token();
+    $error = '';
+    $owner = null;
+    foreach (admin_users() as $u) {
+        if (is_owner($u)) {
+            $owner = $u;
+        }
+    }
+    if ($isPost && isset($_POST['recover']) && $owner) {
+        csrf_check();
+        if ($left = login_locked()) {
+            $error = 'Забагато невдалих спроб. Спробуйте за ' . ceil($left / 60) . ' хв.';
+        } elseif (!hash_equals($token, post('token'))) {
+            login_fail();
+            $error = 'Код не збігається. Візьміть його з другого рядка файлу config/recover-token.php на сервері.';
+        } elseif ($p = password_problem((string) ($_POST['password'] ?? ''), (string) $owner['login'])) {
+            $error = $p;
+        } elseif (($_POST['password'] ?? '') !== ($_POST['password2'] ?? '')) {
+            $error = 'Паролі не збігаються.';
+        } else {
+            admin_update_user((string) $owner['login'], static function (array $u): array {
+                $u['hash'] = password_hash((string) $_POST['password'], PASSWORD_DEFAULT);
+                $u['pv'] = (int) ($u['pv'] ?? 0) + 1;
+                unset($u['must_change']);
+                return $u;
+            });
+            recover_finish();
+            $GLOBALS['user'] = $owner;
+            journal_add('відновлено доступ', 'обліковий запис', (string) $owner['name']);
+            flash('Пароль головного адміністратора змінено. Увійдіть з новим паролем.');
+            back('');
+        }
+    }
+    admin_view('recover', ['error' => $error, 'owner' => $owner, 'bare' => true]);
 }
 
 /* ── Вхід і вихід ── */
@@ -108,6 +146,12 @@ if ($isPost) {
         redirect(current_path());
     }
     csrf_check();
+}
+
+// Тимчасовий пароль, який видав головний адміністратор, треба замінити власним, перш ніж працювати далі.
+if (!empty($user['must_change']) && $section !== 'oblikovyi-zapys') {
+    flash('Ви ввійшли з тимчасовим паролем. Задайте власний пароль — після цього відкриються всі розділи.', 'err');
+    back('oblikovyi-zapys');
 }
 
 require APP . '/admin/actions.php';

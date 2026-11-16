@@ -42,13 +42,106 @@ function guard_write(string $file, string $data): void
     file_put_contents($file, GUARD . $data, LOCK_EX);
 }
 
+/**
+ * Облікові записи. Ролі:
+ *   owner  — головний адміністратор (рівно один): усе, зокрема доступи інших і відкат до резервної копії;
+ *   admin  — адміністратор: увесь вміст і налаштування сайту, без керування доступами;
+ *   editor — редактор: сторінки, новини, документи, кадри, гуртки.
+ */
 function admin_users(): array
 {
     if (!is_file(USERS_FILE)) {
         return [];
     }
     $u = include USERS_FILE;
-    return is_array($u) ? $u : [];
+    if (!is_array($u) || !$u) {
+        return [];
+    }
+    // головний адміністратор завжди рівно один: якщо його ще не призначено — ним стає перший адміністратор
+    $owners = array_keys(array_filter($u, static fn($x): bool => ($x['role'] ?? '') === 'owner'));
+    if (count($owners) !== 1) {
+        $first = $owners[0] ?? null;
+        if ($first === null) {
+            foreach ($u as $i => $x) {
+                if (($x['role'] ?? '') === 'admin') {
+                    $first = $i;
+                    break;
+                }
+            }
+            $first ??= array_key_first($u);
+        }
+        foreach ($u as $i => $x) {
+            if ($i === $first) {
+                $u[$i]['role'] = 'owner';
+            } elseif (($x['role'] ?? '') === 'owner') {
+                $u[$i]['role'] = 'admin';
+            }
+        }
+        admin_save_users($u);
+    }
+    return $u;
+}
+
+function is_owner(?array $u): bool
+{
+    return ($u['role'] ?? '') === 'owner';
+}
+
+/** Адміністратор або головний адміністратор. */
+function is_admin_user(?array $u): bool
+{
+    return in_array($u['role'] ?? '', ['owner', 'admin'], true);
+}
+
+function role_label(string $role): string
+{
+    return ['owner' => 'головний адміністратор', 'admin' => 'адміністратор', 'editor' => 'редактор'][$role] ?? 'редактор';
+}
+
+/** Змінює один обліковий запис за логіном і зберігає список. */
+function admin_update_user(string $login, callable $change): bool
+{
+    $users = admin_users();
+    $found = false;
+    foreach ($users as $i => $u) {
+        if ($u['login'] === $login) {
+            $users[$i] = $change($u);
+            $found = true;
+        }
+    }
+    if ($found) {
+        admin_save_users($users);
+    }
+    return $found;
+}
+
+/**
+ * Відновлення доступу головного адміністратора, якщо пароль забуто.
+ * Той, хто має доступ до файлів хостингу, створює порожній файл config/recover.
+ * Після цього сторінка входу просить код із config/recover-token.php і новий пароль.
+ */
+const RECOVER_FLAG = CONFIG . '/recover';
+const RECOVER_TOKEN_FILE = CONFIG . '/recover-token.php';
+
+function recover_requested(): bool
+{
+    return is_file(RECOVER_FLAG);
+}
+
+function recover_token(): string
+{
+    $t = trim(guard_read(RECOVER_TOKEN_FILE));
+    if (!preg_match('~^[0-9a-f]{24}$~', $t)) {
+        $t = bin2hex(random_bytes(12));
+        guard_write(RECOVER_TOKEN_FILE, $t . "\n");
+    }
+    return $t;
+}
+
+function recover_finish(): void
+{
+    @unlink(RECOVER_FLAG);
+    @unlink(RECOVER_TOKEN_FILE);
 }
 
 function admin_save_users(array $users): void

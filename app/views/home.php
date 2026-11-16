@@ -14,38 +14,28 @@ foreach ($plan['months'] as $m) {
 $days = days_to($plan['start'] ?? '2027-09-01');
 $pupils = (int) preg_replace('~\D~', '', (string) ($n['pupils'] ?? '0'));
 $classes = (int) preg_replace('~\D~', '', (string) ($n['classes'] ?? '0'));
-$tiles = [
-    ['rozklad', '/navchannia/rozklad/', 'Розклад уроків і дзвінків', 'Уроки по класах, дзвінки, структура навчального року', 'wide'],
-    ['vstup', '/batkam-i-uchniam/vstup/', 'Вступ до ліцею', 'Документи, правила прийому, територія', 'sun'],
-    ['harchuvannia', '/batkam-i-uchniam/harchuvannia/', 'Харчування', 'Меню, режим, пільги', 'sail'],
-    ['bezpeka', '/pidtrymka-i-bezpeka/bezpeka-i-ukryttia/', 'Безпека і укриття', 'Дії під час тривоги, дві зміни', 'blue'],
-    ['psyholog', '/pidtrymka-i-bezpeka/psyhologichna-sluzhba/', 'Психологічна служба', 'Підтримка учнів і батьків', 'green'],
-    ['inkliuziia', '/pidtrymka-i-bezpeka/inkliuzyvne-navchannia/', 'Інклюзивне навчання', 'Команда супроводу, асистенти', 'green'],
-    ['profilna', '/navchannia/profilna-shkola/', 'Профільна школа', 'Академічний ліцей з 2027 року', 'sun'],
-    ['dokumenty', '/dokumenty/', 'Документи', 'Реєстр за статтею 30', 'sail'],
-    ['gurtky', '/gurtky/', 'Гуртки і клуби', 'Пласт, спорт, творчість', 'blue'],
-];
+$h = home_data();
+$tiles = $h['tiles'];
 ?>
 <section class="hero">
   <div class="wrap hero-in">
     <div class="hero-txt">
-      <p class="eyebrow hero-eyebrow">Біляївка · Одеський район · з <?= e(setting('site.founded', '1897')) ?> року</p>
-      <h1>Школа, яку впізнають за <span class="hl">вітрилами</span></h1>
-      <p class="lead">Комунальний ліцей з інклюзивним навчанням і трьома корпусами. Тут вчаться думати, дружити й не боятися ставити питання.</p>
+      <p class="eyebrow hero-eyebrow"><?= e($h['hero']['eyebrow']) ?></p>
+      <h1><?= hl_title($h['hero']['title']) ?></h1>
+      <p class="lead"><?= e($h['hero']['lead']) ?></p>
       <div class="actions">
-        <a class="btn" href="<?= e(url('/batkam-i-uchniam/vstup/')) ?>">Вступ до ліцею</a>
-        <a class="btn btn-ghost" href="<?= e(url('/navchannia/rozklad/')) ?>">Розклад і дзвінки</a>
+        <?php foreach ($h['hero']['buttons'] as $i => $btn): ?><a class="btn<?= $i ? ' btn-ghost' : '' ?>" href="<?= e(url(safe_url((string) $btn['url']))) ?>"><?= e($btn['label']) ?></a>
+        <?php endforeach; ?>
       </div>
       <ul class="chips" aria-label="Коротко про ліцей">
         <?php if ($pupils): ?><li><?= $pupils ?> <?= plural($pupils, 'учень', 'учні', 'учнів') ?></li><?php endif; ?>
         <?php if ($classes): ?><li><?= $classes ?> <?= plural($classes, 'клас', 'класи', 'класів') ?></li><?php endif; ?>
-        <li>3 корпуси</li>
-        <li>інклюзивне навчання</li>
+        <?php foreach ($h['hero']['chips'] as $chip): ?><li><?= e($chip) ?></li><?php endforeach; ?>
       </ul>
     </div>
     <div class="hero-art" aria-hidden="true">
       <span class="hero-sun"></span>
-      <span class="hero-emb"><img src="<?= e(url('/uploads/emblema.png')) ?>" alt="" width="240" height="240"><span class="hero-motto">«<?= e(setting('site.motto')) ?>»</span></span>
+      <span class="hero-emb"><img src="<?= e(asset('/uploads/emblema.png')) ?>" alt="" width="240" height="240"><span class="hero-motto">«<?= e(setting('site.motto')) ?>»</span></span>
       <svg class="hero-wave" viewBox="0 0 1200 62" preserveAspectRatio="none">
         <path d="M0 34 C150 6 300 62 450 34 S750 6 900 34 S1100 62 1200 34 V62 H0z" fill="#BFDBFF" opacity=".7"/>
         <path d="M0 46 C200 24 350 66 550 46 S850 24 1000 46 S1150 64 1200 50 V62 H0z" fill="#8FC0FF" opacity=".55"/>
@@ -57,10 +47,10 @@ $tiles = [
 
 <section class="sec" aria-labelledby="h-quick">
   <div class="wrap">
-    <div class="sec-head"><h2 id="h-quick">Швидко знайти</h2></div>
+    <div class="sec-head"><h2 id="h-quick"><?= e($h['headings']['quick']) ?></h2></div>
     <ul class="bento">
       <?php foreach ($tiles as $t): ?>
-        <li class="is-<?= e($t[4]) ?>"><a href="<?= e(url($t[1])) ?>"><img class="bento-art" src="<?= e(url('/assets/img/tiles/' . $t[0] . '.svg')) ?>" alt="" width="200" height="150"><b><?= e($t[2]) ?></b><span><?= e($t[3]) ?></span></a></li>
+        <li class="is-<?= e(isset(TILE_TONES[$t['tone'] ?? '']) ? $t['tone'] : 'blue') ?>"><a href="<?= e(url(safe_url((string) $t['url']))) ?>"><?php if (in_array($t['art'] ?? '', tile_arts(), true)): ?><img class="bento-art" src="<?= e(url('/assets/img/tiles/' . $t['art'] . '.svg')) ?>" alt="" width="200" height="150"><?php endif; ?><b><?= e($t['title']) ?></b><span><?= e($t['text']) ?></span></a></li>
       <?php endforeach; ?>
     </ul>
   </div>
@@ -68,7 +58,7 @@ $tiles = [
 
 <section class="sec sec-soft" aria-labelledby="h-news">
   <div class="wrap">
-    <div class="sec-head"><h2 id="h-news">Новини ліцею</h2><a class="more" href="<?= e(url('/novyny/')) ?>">Усі новини</a></div>
+    <div class="sec-head"><h2 id="h-news"><?= e($h['headings']['news']) ?></h2><a class="more" href="<?= e(url('/novyny/')) ?>">Усі новини</a></div>
     <?php if ($lead): ?>
     <div class="news-home">
       <a class="news-lead" href="<?= e(url(news_url($lead))) ?>">
@@ -85,26 +75,28 @@ $tiles = [
   </div>
 </section>
 
+<?php if (!empty($h['promo']['show'])): ?>
 <section class="sec" aria-labelledby="h-promo">
   <div class="wrap">
     <div class="promo">
       <div class="promo-txt">
-        <p class="eyebrow">Старша профільна школа</p>
-        <h2 id="h-promo">Академічний ліцей з 1 вересня 2027 року</h2>
-        <p>Що зміниться для нинішніх дев’ятикласників, як обрати профіль і де поставити запитання.</p>
+        <p class="eyebrow"><?= e($h['promo']['eyebrow']) ?></p>
+        <h2 id="h-promo"><?= e($h['promo']['title']) ?></h2>
+        <p><?= e($h['promo']['text']) ?></p>
         <?php if ($nowItems): ?><p class="promo-now"><span><?= e(UA_MONTHS[(int) date('n')]) ?> за планом</span><?= e($nowItems[0]['what']) ?></p><?php endif; ?>
-        <a class="btn btn-light" href="<?= e(url('/navchannia/profilna-shkola/')) ?>">Усе про профільну школу</a>
+        <a class="btn btn-light" href="<?= e(url(safe_url((string) $h['promo']['url']))) ?>"><?= e($h['promo']['button']) ?></a>
       </div>
       <div class="promo-cd" aria-hidden="true"><b data-count><?= $days ?></b><span><?= plural($days, 'день', 'дні', 'днів') ?> до старту</span></div>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <section class="sec" aria-labelledby="h-docs">
   <div class="wrap two-col">
     <div class="sec-head is-col">
-      <h2 id="h-docs">Прозорість і документи</h2>
-      <p>Статут, освітні програми, звіти й кошторис — у відкритому доступі за статтею 30 Закону «Про освіту». Біля кожного документа — дата оприлюднення.</p>
+      <h2 id="h-docs"><?= e($h['docs']['title']) ?></h2>
+      <p><?= e($h['docs']['text']) ?></p>
       <a class="more" href="<?= e(url('/dokumenty/')) ?>">Увесь реєстр документів</a>
     </div>
     <?= component_documents(['limit' => 6, 'real' => '1']) ?>
@@ -113,16 +105,16 @@ $tiles = [
 
 <section class="sec sec-soft" aria-labelledby="h-about">
   <div class="wrap">
-    <div class="sec-head"><h2 id="h-about">Ліцей у цифрах</h2></div>
+    <div class="sec-head"><h2 id="h-about"><?= e($h['headings']['numbers']) ?></h2></div>
     <?= component_numbers() ?>
-    <div class="sec-head sec-head-sub"><h3>Адміністрація</h3><a class="more" href="<?= e(url('/kadrovyj-sklad/')) ?>">Увесь кадровий склад</a></div>
+    <div class="sec-head sec-head-sub"><h3><?= e($h['headings']['team']) ?></h3><a class="more" href="<?= e(url('/kadrovyj-sklad/')) ?>">Увесь кадровий склад</a></div>
     <?= component_team(['group' => 'administratsiya', 'limit' => 5]) ?>
   </div>
 </section>
 
 <section class="sec" aria-labelledby="h-clubs">
   <div class="wrap">
-    <div class="sec-head"><h2 id="h-clubs">Гуртки і клуби</h2><a class="more" href="<?= e(url('/gurtky/')) ?>">Усі гуртки</a></div>
+    <div class="sec-head"><h2 id="h-clubs"><?= e($h['headings']['clubs']) ?></h2><a class="more" href="<?= e(url('/gurtky/')) ?>">Усі гуртки</a></div>
     <?= component_club_list(['limit' => 3]) ?>
   </div>
 </section>
@@ -131,12 +123,12 @@ $tiles = [
   <div class="wrap">
     <div class="cta">
       <div>
-        <h2 id="h-cta">Маєте питання?</h2>
-        <p>Зателефонуйте до приймальні або напишіть. Якщо потрібен офіційний документ — подайте запит на публічну інформацію: ліцей відповідає протягом п’яти робочих днів.</p>
+        <h2 id="h-cta"><?= e($h['cta']['title']) ?></h2>
+        <p><?= e($h['cta']['text']) ?></p>
       </div>
       <div class="actions">
-        <a class="btn btn-light" href="<?= e(url('/kontakty/')) ?>">Контакти</a>
-        <a class="btn btn-outline-light" href="<?= e(url('/publichna-informacia/')) ?>">Запит на інформацію</a>
+        <?php foreach ($h['cta']['buttons'] as $i => $btn): ?><a class="btn <?= $i ? 'btn-outline-light' : 'btn-light' ?>" href="<?= e(url(safe_url((string) $btn['url']))) ?>"><?= e($btn['label']) ?></a>
+        <?php endforeach; ?>
       </div>
     </div>
   </div>

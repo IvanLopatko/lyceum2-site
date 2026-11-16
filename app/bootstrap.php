@@ -36,8 +36,13 @@ require APP . '/lib/data.php';
 require APP . '/lib/status.php';
 require APP . '/lib/render.php';
 require APP . '/lib/components.php';
+require APP . '/lib/site.php';
+require APP . '/lib/backup.php';
 
 // Якщо сайт відкрито через https, браузер надалі сам відмовлятиметься від незашифрованого з’єднання.
 if (is_https() && !is_local_host()) {
     header('Strict-Transport-Security: max-age=15552000');
 }
+
+// Щоденна резервна копія вмісту: створюється з першим зверненням до сайту за добу.
+backup_maybe();

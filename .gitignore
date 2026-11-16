@@ -6,6 +6,9 @@ config/*
 content/.history/
 # Кошик видалених файлів (на сервері, 30 днів)
 content/.trash/
+# Журнал дій і щоденні резервні копії (на сервері)
+content/.log/
+content/.backups/
 *.lock
 *.tmp*
 .DS_Store

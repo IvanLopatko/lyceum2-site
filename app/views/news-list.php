@@ -12,7 +12,7 @@ $pageUrl = static fn(int $n): string => $n === 1 ? $base : $base . 'storinka/' .
 <section class="page-head"><div class="wrap">
   <nav class="crumbs" aria-label="Ви тут"><a href="<?= e(url('/')) ?>">Головна</a><?php if ($cat): ?><a href="<?= e(url('/novyny/')) ?>">Новини</a><?php endif; ?><span aria-current="page"><?= e($heading ?? $title) ?></span></nav>
   <h1><?= e($heading ?? $title) ?></h1>
-  <p class="lead">Події, оголошення й досягнення ліцею. Дописи переносимо зі спільноти ліцею у Facebook.</p>
+  <p class="lead"><?= e(site_text('news_lead')) ?></p>
   <nav class="chips chips-nav" aria-label="Рубрики">
     <a href="<?= e(url('/novyny/')) ?>"<?= $cat === '' ? ' aria-current="page"' : '' ?>>Усі</a>
     <?php foreach (taxonomies()['news'] as $t): if (!news_in($t['slug'])) continue; ?>

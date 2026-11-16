@@ -326,7 +326,37 @@
           g.appendChild(f);
         });
         box.appendChild(g);
-        box.appendChild(el('p', 'muted small', 'Фото додаються через новини; тут можна лише прибрати зайві.'));
+        var up = el('label', 'upload');
+        up.appendChild(document.createTextNode('Додати фото (JPG, PNG або WebP, до 15 МБ кожне) '));
+        var fi = el('input');
+        fi.type = 'file';
+        fi.accept = 'image/jpeg,image/png,image/webp';
+        fi.multiple = true;
+        up.appendChild(fi);
+        var note = el('p', 'muted small', 'Фото зменшуються й одразу з’являються тут. На сайті вони будуть після кнопки «Зберегти».');
+        fi.addEventListener('change', function () {
+            if (!fi.files.length) { return; }
+            var fd = new FormData();
+            var tok = store.form.querySelector('input[name="_csrf"]');
+            fd.append('_csrf', tok ? tok.value : '');
+            Array.prototype.forEach.call(fi.files, function (f) { fd.append('photos[]', f); });
+            note.textContent = 'Завантажую…';
+            fi.disabled = true;
+            fetch(cfg.uploadUrl, { method: 'POST', body: fd, credentials: 'same-origin' })
+              .then(function (r) { return r.json(); })
+              .then(function (res) {
+                b.images = (b.images || []).concat(res.images || []);
+                sync();
+                render();
+                if (res.errors && res.errors.length) { window.alert('Не всі фото додались: ' + res.errors.join(' ')); }
+              })
+              .catch(function () {
+                fi.disabled = false;
+                note.textContent = 'Не вдалося завантажити. Можливо, фото разом завеликі: додавайте по кілька.';
+              });
+        });
+        box.appendChild(up);
+        box.appendChild(note);
         break;
       case 'component':
         var argsBox = el('div', 'fields');

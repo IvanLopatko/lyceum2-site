@@ -8,13 +8,14 @@ if (!defined('ROOT')) {
     exit;
 }
 
-$isAdmin = ($user['role'] ?? '') === 'admin';
+$isAdmin = is_admin_user($user);
+$isOwner = is_owner($user);
 
 /** Адреси, зайняті службовими розділами сайту: сторінку з такою адресою створити не можна. */
 const RESERVED_SLUGS = ['admin', 'uploads', 'assets', 'app', 'content', 'config', 'tools', 'docs', 'novyny', 'dokumenty', 'kadrovyj-sklad', 'gurtky', 'poshuk', 'index', 'robots', 'sitemap', 'favicon', 'storinka', 'rubryka'];
 
 /** Розділи, доступні лише адміністраторові. */
-const ADMIN_ONLY = ['nalashtuvannia'];
+const ADMIN_ONLY = ['nalashtuvannia', 'holovna', 'teksty', 'rubryky', 'plan', 'zhurnal', 'kopii'];
 
 function next_id(array $list, int $start = 1): int
 {
@@ -36,6 +37,8 @@ if (in_array($section, ADMIN_ONLY, true) && !$isAdmin) {
     flash('Цей розділ доступний лише адміністраторові сайту.', 'err');
     back('');
 }
+
+require APP . '/admin/actions-more.php';
 
 switch ($section) {
 
@@ -59,6 +62,7 @@ switch ($section) {
                     store_write($f, $keep);
                 }
             }
+            journal_add('прибрано зразкові записи', 'сайт', (string) $n);
             flash("Прибрано зразкових записів: $n. Попередній стан можна повернути в розділі «Історія змін».");
             back('');
         }
@@ -86,6 +90,10 @@ switch ($section) {
                 back('storinky/' . $slug);
             }
             store_delete('pages/' . $slug . '.json');
+            foreach (uploads_in($page) as $u) {
+                trash_upload($u);
+            }
+            journal_add('видалено', 'сторінка', (string) $page['title']);
             flash('Сторінку видалено. Повернути її можна в розділі «Історія змін».');
             back('storinky');
         }
@@ -106,7 +114,8 @@ switch ($section) {
             }
             $parent = post('parent');
             // у формі лишаємо те, що людина ввела, — щоб помилка не коштувала їй роботи
-            $draft = array_merge($page, ['title' => $title, 'lead' => ct(post('lead')), 'parent' => $parent, 'order' => (int) post('order', '0'), 'template' => isset($_POST['template']), 'blocks' => $blocks]);
+            $icon = preg_replace('~[^a-z]~', '', post('icon')) ?? '';
+            $draft = array_merge($page, ['title' => $title, 'lead' => ct(post('lead')), 'parent' => $parent, 'order' => (int) post('order', '0'), 'template' => isset($_POST['template']), 'blocks' => $blocks, 'icon' => $icon]);
             if ($title === '') {
                 flash('Заголовок не може бути порожнім. Решту введеного збережено у формі — допишіть заголовок і натисніть «Зберегти».', 'err');
                 admin_view('page-edit', ['page' => $draft, 'isNew' => $isNew]);
@@ -137,7 +146,15 @@ switch ($section) {
                 'updated' => today(),
                 'blocks' => $blocks,
             ];
+            if ($icon !== '') {
+                $data['icon'] = $icon;
+            }
             store_write('pages/' . $newSlug . '.json', $data);
+            // фото, прибрані з галерей сторінки, зникають із сайту (у кошик на 30 днів)
+            foreach (array_diff(uploads_in($page), uploads_in($data)) as $gone) {
+                trash_upload($gone);
+            }
+            journal_add($isNew ? 'створено' : 'змінено', 'сторінка', $title, 'storinky/' . $newSlug);
             flash('Збережено. Сторінка на сайті вже оновилась.');
             back('storinky/' . $newSlug);
         }
@@ -161,6 +178,7 @@ switch ($section) {
             foreach ($photos as $ph) {
                 trash_upload($ph);
             }
+            journal_add('видалено', 'новина', (string) $item['title']);
             flash('Новину видалено. Повернути її разом із фото можна протягом 30 днів у розділі «Історія змін».');
             back('novyny');
         }
@@ -214,6 +232,7 @@ switch ($section) {
             foreach ($remove as $r) {
                 trash_upload($r);
             }
+            journal_add($isNew ? 'створено' : 'змінено', $item['draft'] ? 'чернетка новини' : 'новина', $item['title'], 'novyny/' . $item['id']);
             if ($errors) {
                 flash('Новину збережено, але не всі фото додались: ' . implode(' ', array_unique($errors)), 'err');
             } else {
@@ -243,6 +262,7 @@ switch ($section) {
             if (!empty($doc['file'])) {
                 trash_upload($doc['file']);
             }
+            journal_add('видалено', 'документ', (string) $doc['title']);
             flash('Документ прибрано з реєстру, файл за посиланням більше не відкривається. Повернути можна протягом 30 днів у розділі «Історія змін».');
             back('dokumenty');
         }
@@ -285,6 +305,7 @@ switch ($section) {
             if ($oldFile !== '' && $oldFile !== $doc['file']) {
                 trash_upload($oldFile);
             }
+            journal_add($isNew ? 'створено' : 'змінено', 'документ', $doc['title'], 'dokumenty/' . $doc['id']);
             flash('Документ збережено.');
             back('dokumenty/' . $doc['id']);
         }
@@ -310,6 +331,7 @@ switch ($section) {
             if (!empty($p['photo'])) {
                 trash_upload($p['photo']);
             }
+            journal_add('видалено', 'працівник', (string) $p['name']);
             flash('Запис видалено разом із фото. Повернути можна протягом 30 днів у розділі «Історія змін».');
             back('kadry');
         }
@@ -347,6 +369,7 @@ switch ($section) {
             if ($oldPhoto !== '' && $oldPhoto !== $p['photo']) {
                 trash_upload($oldPhoto);
             }
+            journal_add($isNew ? 'створено' : 'змінено', 'працівник', $p['name'], 'kadry/' . $p['id']);
             $photoError !== '' ? flash('Запис збережено, але фото не додалось: ' . $photoError, 'err') : flash('Збережено.');
             back('kadry/' . $p['id']);
         }
@@ -369,6 +392,7 @@ switch ($section) {
         if ($isPost && post('do') === 'delete' && !$isNew) {
             array_splice($list, $idx, 1);
             store_write('clubs.json', $list);
+            journal_add('видалено', 'гурток', (string) $c['title']);
             flash('Гурток видалено. Повернути можна в розділі «Історія змін».');
             back('gurtky');
         }
@@ -388,6 +412,7 @@ switch ($section) {
                 $list[$idx] = $c;
             }
             store_write('clubs.json', $list);
+            journal_add($isNew ? 'створено' : 'змінено', 'гурток', $c['title'], 'gurtky/' . $c['id']);
             flash('Збережено.');
             back('gurtky/' . $c['id']);
         }
@@ -436,6 +461,20 @@ switch ($section) {
             }
             $s['responsible'] = $r;
             store_write('settings.json', $s);
+            journal_add('змінено', 'налаштування', '', 'nalashtuvannia');
+            $logoError = '';
+            foreach (uploaded_files('logo') as $f) {
+                try {
+                    save_logo($f);
+                    journal_add('замінено', 'емблема');
+                } catch (RuntimeException $ex) {
+                    $logoError = $ex->getMessage();
+                }
+            }
+            if ($logoError !== '') {
+                flash('Налаштування збережено, але емблему не замінено: ' . $logoError, 'err');
+                back('nalashtuvannia');
+            }
             flash('Налаштування збережено.');
             back('nalashtuvannia');
         }
@@ -444,8 +483,8 @@ switch ($section) {
     /* ═════════ Історія змін: попередні версії та видалене ═════════ */
     case 'istoriia':
         $rel = (string) ($_GET['f'] ?? ($_POST['f'] ?? ''));
-        $okRel = preg_match('~^(pages/[a-z0-9-]+|news/\d+|documents|staff|clubs|settings)\.json$~', $rel) === 1;
-        if (!$isAdmin && $rel === 'settings.json') {
+        $okRel = preg_match('~^(pages/[a-z0-9-]+|news/\d+|documents|staff|clubs|settings|home|taxonomies|profile-plan)\.json$~', $rel) === 1;
+        if (!$isAdmin && in_array($rel, ['settings.json', 'home.json', 'taxonomies.json', 'profile-plan.json'], true)) {
             $okRel = false;
         }
         if ($isPost && post('do') === 'restore') {
@@ -461,6 +500,7 @@ switch ($section) {
                     $missing++;
                 }
             }
+            journal_add('відновлено попередню версію', 'запис', backup_label($rel, (string) json_encode($data, JSON_UNESCAPED_UNICODE)));
             flash('Версію відновлено.' . ($missing ? " Не вдалося повернути файлів: $missing (минуло понад 30 днів або їх прибрали вручну)." : ''));
             if (preg_match('~^pages/([a-z0-9-]+)\.json$~', $rel, $m)) {
                 back('storinky/' . $m[1]);
@@ -472,58 +512,117 @@ switch ($section) {
         }
         admin_view('history', ['rel' => $okRel ? $rel : '', 'isAdmin' => $isAdmin]);
 
-    /* ═════════ Обліковий запис ═════════ */
+    /* ═════════ Обліковий запис і доступи ═════════ */
     case 'oblikovyi-zapys':
-        if ($isPost && post('do') === 'password') {
+        $do = $isPost ? post('do') : '';
+        if ($do === 'password') {
             if (!password_verify((string) ($_POST['old'] ?? ''), $user['hash'])) {
                 flash('Поточний пароль неправильний.', 'err');
             } elseif ($p = password_problem((string) ($_POST['new'] ?? ''), (string) $user['login'])) {
                 flash($p, 'err');
             } elseif (($_POST['new'] ?? '') !== ($_POST['new2'] ?? '')) {
                 flash('Нові паролі не збігаються.', 'err');
+            } elseif (password_verify((string) $_POST['new'], $user['hash'])) {
+                flash('Новий пароль має відрізнятися від поточного.', 'err');
             } else {
-                $users = admin_users();
-                $pv = 0;
-                foreach ($users as &$u) {
-                    if ($u['login'] === $user['login']) {
-                        $u['hash'] = password_hash((string) $_POST['new'], PASSWORD_DEFAULT);
-                        $u['pv'] = $pv = (int) ($u['pv'] ?? 0) + 1;
-                    }
-                }
-                unset($u);
-                admin_save_users($users);
+                $pv = (int) ($user['pv'] ?? 0) + 1;
+                admin_update_user((string) $user['login'], static function (array $u) use ($pv): array {
+                    $u['hash'] = password_hash((string) $_POST['new'], PASSWORD_DEFAULT);
+                    $u['pv'] = $pv;
+                    unset($u['must_change']);
+                    return $u;
+                });
                 // цей сеанс лишається, усі інші (на інших пристроях) завершуються
                 $_SESSION['pv'] = $pv;
                 session_regenerate_id(true);
+                journal_add('змінено власний пароль', 'обліковий запис', (string) $user['name']);
                 flash('Пароль змінено. На інших пристроях доведеться ввійти знову.');
             }
             back('oblikovyi-zapys');
         }
-        if ($isPost && post('do') === 'add' && $isAdmin) {
-            $login = post('login');
-            $users = admin_users();
+        // усе нижче — лише головний адміністратор
+        if ($do !== '' && !$isOwner) {
+            flash('Доступами співробітників керує лише головний адміністратор.', 'err');
+            back('oblikovyi-zapys');
+        }
+        $target = null;
+        foreach (admin_users() as $u) {
+            if ($u['login'] === post('login')) {
+                $target = $u;
+            }
+        }
+        if ($do === 'add') {
+            $login = strtolower(post('login'));
             if (!preg_match('~^[a-z0-9._-]{3,32}$~', $login)) {
                 flash('Логін: 3–32 латинські літери, цифри, крапка, дефіс.', 'err');
-            } elseif (in_array($login, array_column($users, 'login'), true)) {
+            } elseif ($target || in_array($login, array_column(admin_users(), 'login'), true)) {
                 flash('Такий логін уже є.', 'err');
             } elseif ($p = password_problem((string) ($_POST['password'] ?? ''), $login)) {
                 flash($p, 'err');
             } else {
-                $users[] = ['login' => $login, 'name' => ct(post('name')) ?: $login, 'role' => post('role') === 'admin' ? 'admin' : 'editor', 'hash' => password_hash((string) $_POST['password'], PASSWORD_DEFAULT), 'pv' => 0];
+                $users = admin_users();
+                $users[] = ['login' => $login, 'name' => ct(post('name')) ?: $login, 'role' => post('role') === 'admin' ? 'admin' : 'editor',
+                    'hash' => password_hash((string) $_POST['password'], PASSWORD_DEFAULT), 'pv' => 0, 'must_change' => true, 'created' => today()];
                 admin_save_users($users);
-                flash('Обліковий запис додано. Передайте пароль людині особисто, не в чаті.');
+                journal_add('створено доступ', 'обліковий запис', (ct(post('name')) ?: $login) . ' (' . role_label(post('role') === 'admin' ? 'admin' : 'editor') . ')');
+                flash('Доступ створено. Передайте логін і тимчасовий пароль людині особисто, не в чаті: під час першого входу сайт попросить її задати власний пароль.');
             }
             back('oblikovyi-zapys');
         }
-        if ($isPost && post('do') === 'remove' && $isAdmin) {
-            $login = post('login');
-            if ($login !== $user['login']) {
-                admin_save_users(array_values(array_filter(admin_users(), static fn($u) => $u['login'] !== $login)));
-                flash('Обліковий запис видалено.');
-            }
+        if (in_array($do, ['remove', 'role', 'resetpw', 'transfer'], true) && (!$target || $target['login'] === $user['login'])) {
+            flash('Такого облікового запису немає.', 'err');
             back('oblikovyi-zapys');
         }
-        admin_view('account', ['isAdmin' => $isAdmin]);
+        if ($do === 'remove') {
+            admin_save_users(array_values(array_filter(admin_users(), static fn($u) => $u['login'] !== $target['login'])));
+            journal_add('забрано доступ', 'обліковий запис', (string) $target['name']);
+            flash('Доступ забрано: ' . $target['name'] . ' більше не зможе ввійти.');
+            back('oblikovyi-zapys');
+        }
+        if ($do === 'role') {
+            $role = post('role') === 'admin' ? 'admin' : 'editor';
+            admin_update_user((string) $target['login'], static function (array $u) use ($role): array {
+                $u['role'] = $role;
+                return $u;
+            });
+            journal_add('змінено роль', 'обліковий запис', $target['name'] . ' → ' . role_label($role));
+            flash('Роль змінено: ' . $target['name'] . ' — ' . role_label($role) . '.');
+            back('oblikovyi-zapys');
+        }
+        if ($do === 'resetpw') {
+            if ($p = password_problem((string) ($_POST['password'] ?? ''), (string) $target['login'])) {
+                flash($p, 'err');
+                back('oblikovyi-zapys');
+            }
+            admin_update_user((string) $target['login'], static function (array $u): array {
+                $u['hash'] = password_hash((string) $_POST['password'], PASSWORD_DEFAULT);
+                $u['pv'] = (int) ($u['pv'] ?? 0) + 1; // усі відкриті сеанси цієї людини завершуються
+                $u['must_change'] = true;
+                return $u;
+            });
+            journal_add('видано новий тимчасовий пароль', 'обліковий запис', (string) $target['name']);
+            flash('Новий тимчасовий пароль для ' . $target['name'] . ' задано. Передайте його особисто: під час входу сайт попросить замінити його власним.');
+            back('oblikovyi-zapys');
+        }
+        if ($do === 'transfer') {
+            if (!password_verify((string) ($_POST['password'] ?? ''), (string) $user['hash'])) {
+                flash('Ваш пароль неправильний. Права не передано.', 'err');
+                back('oblikovyi-zapys');
+            }
+            $users = admin_users();
+            foreach ($users as $i => $u) {
+                if ($u['login'] === $target['login']) {
+                    $users[$i]['role'] = 'owner';
+                } elseif ($u['login'] === $user['login']) {
+                    $users[$i]['role'] = 'admin';
+                }
+            }
+            admin_save_users($users);
+            journal_add('передано права головного адміністратора', 'обліковий запис', (string) $target['name']);
+            flash('Права головного адміністратора передано: ' . $target['name'] . '. Ви тепер адміністратор.');
+            back('oblikovyi-zapys');
+        }
+        admin_view('account', ['isAdmin' => $isAdmin, 'isOwner' => $isOwner]);
 }
 
 http_response_code(404);

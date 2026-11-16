@@ -29,7 +29,7 @@ $showDemo = setting('site.demo_bar', true) && has_demo();
 <?php if ($hideFromSearch): ?><meta name="robots" content="noindex, nofollow">
 <?php endif; ?>
 <meta name="theme-color" content="#1C6FE0">
-<link rel="icon" href="<?= e(url('/uploads/emblema.png')) ?>">
+<link rel="icon" href="<?= e(asset('/uploads/emblema.png')) ?>">
 <link rel="preload" href="<?= e(url('/assets/fonts/onest-cyrillic.woff2')) ?>" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="<?= e(asset('/assets/css/fonts.css')) ?>">
 <link rel="stylesheet" href="<?= e(asset('/assets/css/icons.css')) ?>">
@@ -47,11 +47,8 @@ $showDemo = setting('site.demo_bar', true) && has_demo();
   <div class="utility">
     <div class="wrap utility-in">
       <nav class="utility-links" aria-label="Швидкі посилання">
-        <a href="<?= e(url('/novyny/')) ?>">Новини</a>
-        <a href="<?= e(url('/navchannia/rozklad/')) ?>">Розклад і дзвінки</a>
-        <a href="<?= e(url('/batkam-i-uchniam/harchuvannia/')) ?>">Харчування</a>
-        <a href="<?= e(url('/dokumenty/')) ?>">Документи</a>
-        <a href="<?= e(url('/kontakty/')) ?>">Контакти</a>
+        <?php foreach (site_links('utility') as $ln): ?><a href="<?= e(url(safe_url((string) $ln['url']))) ?>"><?= e($ln['label']) ?></a>
+        <?php endforeach; ?>
       </nav>
       <form class="search" role="search" action="<?= e(url('/poshuk/')) ?>" method="get">
         <label class="sr" for="q-top">Пошук по сайту</label>
@@ -62,7 +59,7 @@ $showDemo = setting('site.demo_bar', true) && has_demo();
   </div>
   <div class="wrap header-in">
     <a class="brand" href="<?= e(url('/')) ?>" aria-label="<?= e($siteName) ?> — на головну">
-      <img src="<?= e(url('/uploads/emblema.png')) ?>" alt="" width="52" height="52">
+      <img src="<?= e(asset('/uploads/emblema.png')) ?>" alt="" width="52" height="52">
       <span><b><?= e($siteName) ?></b><small>«<?= e(setting('site.motto')) ?>»</small></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav"><span></span><span class="sr">Меню</span></button>
@@ -90,7 +87,7 @@ $showDemo = setting('site.demo_bar', true) && has_demo();
   <div class="stripe" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="wrap footer-in">
     <div class="footer-brand">
-      <img src="<?= e(url('/uploads/emblema.png')) ?>" alt="" width="64" height="64">
+      <img src="<?= e(asset('/uploads/emblema.png')) ?>" alt="" width="64" height="64">
       <p><b><?= e($siteName) ?></b><br><?= e(setting('site.full_name')) ?></p>
     </div>
     <div>
@@ -113,14 +110,12 @@ $showDemo = setting('site.demo_bar', true) && has_demo();
     <div>
       <h2>Корисне</h2>
       <ul>
-        <li><a href="<?= e(url('/publichna-informacia/')) ?>">Публічна інформація</a></li>
-        <li><a href="<?= e(url('/prozorist/shcho-opryliudniuiemo/')) ?>">Що ми оприлюднюємо</a></li>
-        <li><a href="<?= e(url('/dostupnist/')) ?>">Доступність</a></li>
-        <li><a href="<?= e(url('/karta-sajtu/')) ?>">Карта сайту</a></li>
+        <?php foreach (site_links('footer') as $ln): ?><li><a href="<?= e(url(safe_url((string) $ln['url']))) ?>"><?= e($ln['label']) ?></a></li>
+        <?php endforeach; ?>
       </ul>
     </div>
   </div>
-  <div class="wrap footer-bottom"><span>© <?= date('Y') ?> <?= e($siteName) ?></span><span>Матеріали з офіційних документів і спільноти ліцею</span></div>
+  <div class="wrap footer-bottom"><span>© <?= date('Y') ?> <?= e($siteName) ?></span><span><?= e(site_text('footer_note')) ?></span></div>
 </footer>
 
 <button class="a11y-toggle" type="button" aria-expanded="false" aria-controls="a11y"><span class="ico i-eye" aria-hidden="true"></span><span class="sr">Налаштування доступності</span></button>

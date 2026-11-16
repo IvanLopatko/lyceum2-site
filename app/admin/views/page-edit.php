@@ -8,7 +8,8 @@ $icons = array_values(array_unique(array_merge(array_values(PAGE_ICONS), ['phone
 sort($icons);
 $cfg = [
     'types' => BLOCK_TYPES, 'components' => COMPONENTS, 'icons' => $icons,
-    'canHtml' => ($user['role'] ?? '') === 'admin',
+    'canHtml' => is_admin_user($user ?? null),
+    'uploadUrl' => url('/admin/zavantazhennia/'),
     'docSections' => taxonomies()['documents'], 'staffGroups' => taxonomies()['staff'], 'newsCats' => taxonomies()['news'],
 ];
 ?>
@@ -33,6 +34,7 @@ $cfg = [
     <?php endif; ?>
     <label>Порядок у розділі<input name="order" type="number" value="<?= (int) ($page['order'] ?? 0) ?>"></label>
     <?php if ($isNew): ?><label>Адреса (латиницею, можна лишити порожньою)<input name="slug" pattern="[a-z0-9-]*" placeholder="naprykład-tak"></label><?php else: ?><p class="muted">Адреса: <code><?= e(page_path($page['slug'])) ?></code></p><?php endif; ?>
+    <label>Значок на плитці розділу<select name="icon"><option value="">типовий</option><?php foreach ($icons as $ic): ?><option<?= ($page['icon'] ?? '') === $ic ? ' selected' : '' ?>><?= e($ic) ?></option><?php endforeach; ?></select></label>
     <label class="check wide"><input type="checkbox" name="template"<?= !empty($page['template']) ? ' checked' : '' ?>> Текст зразковий — на сайті показується позначка «Зразок наповнення»</label>
   </div>
 

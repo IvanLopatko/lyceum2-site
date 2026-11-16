@@ -48,6 +48,15 @@ $prev = count($mine) >= 2 ? $mine[count($mine) - 2] : null;
 </section>
 <?php endif; ?>
 
+<?php if (!empty($isAdmin)): $bk = backup_latest(); ?>
+<section class="card">
+  <h2>Резервні копії</h2>
+  <?php if ($bk): ?><p class="ok-line">Остання щоденна копія вмісту: <?= e(ua_date(date('Y-m-d', $bk['time'])) . ', ' . date('H:i', $bk['time'])) ?>.</p>
+  <?php else: ?><p class="flash is-warn">Щоденної копії ще немає. Якщо вона не з’явиться за кілька хвилин — сервер не дозволяє запис у теку <code>content</code>.</p><?php endif; ?>
+  <p class="muted small"><a href="<?= e(url('/admin/kopii/')) ?>">Усі копії та відкат</a> · <a href="<?= e(url('/admin/zhurnal/')) ?>">Журнал дій</a></p>
+</section>
+<?php endif; ?>
+
 <section class="card">
   <h2>Пошуковики</h2>
   <?php if ($hidden): ?><p>Зараз сайт <b>закритий від Google та інших пошуковиків</b>, бо на ньому ще є зразкові тексти чи записи і ввімкнено смугу «Зразок сайту». Коли все зразкове буде замінено або прибрано, сайт відкриється сам.</p>

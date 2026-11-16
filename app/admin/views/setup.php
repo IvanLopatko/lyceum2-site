@@ -1,6 +1,6 @@
 <?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <form class="auth" method="post" action="<?= e(url('/admin/')) ?>">
-  <img src="<?= e(url('/uploads/emblema.png')) ?>" alt="" width="72" height="72">
+  <img src="<?= e(asset('/uploads/emblema.png')) ?>" alt="" width="72" height="72">
   <h1>Перший вхід</h1>
   <p class="muted">Створіть головний обліковий запис. Одноразовий код лежить на сервері у файлі <code>config/setup-token.php</code> (другий рядок файлу) — його бачить лише той, хто має доступ до файлів хостингу.</p>
   <?php if (!is_https() && !is_local_host()): ?><p class="flash is-err" role="alert">З’єднання не зашифроване: адреса починається з http://, тож пароль дорогою можуть перехопити. Відкрийте сайт через https://. Якщо так він не відкривається — попросіть підтримку хостингу ввімкнути SSL-сертифікат.</p><?php endif; ?>

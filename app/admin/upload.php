@@ -245,3 +245,46 @@ function upload_limits(): array
     $mem = $bytes((string) ini_get('memory_limit'));
     return ['files' => max(1, (int) ini_get('max_file_uploads') ?: 20), 'post' => $post > 0 ? $post : PHP_INT_MAX, 'file' => $file > 0 ? $file : PHP_INT_MAX, 'memory' => $mem > 0 ? $mem : PHP_INT_MAX];
 }
+
+/**
+ * Замінює емблему сайту (uploads/emblema.png). Картинка перекодовується в PNG зі збереженням
+ * прозорості й зменшується до 512 пікселів; попередня емблема потрапляє в кошик.
+ */
+function save_logo(array $file): void
+{
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('файл не завантажився (код ' . $file['error'] . ').');
+    }
+    if ($file['size'] > 5 * 1024 * 1024) {
+        throw new RuntimeException('файл завеликий: до 5 МБ.');
+    }
+    $info = @getimagesize($file['tmp_name']);
+    if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) {
+        throw new RuntimeException('підтримуються PNG, JPG і WebP.');
+    }
+    if ($info[0] * $info[1] > 25 * 1000 * 1000 || min($info[0], $info[1]) < 64) {
+        throw new RuntimeException('картинка має бути від 64 пікселів і не більша за 25 мегапікселів.');
+    }
+    $src = @imagecreatefromstring((string) file_get_contents($file['tmp_name']));
+    if (!$src) {
+        throw new RuntimeException('не вдалося прочитати картинку.');
+    }
+    $w = imagesx($src);
+    $h = imagesy($src);
+    $k = min(1, 512 / max($w, $h));
+    $dst = imagecreatetruecolor(max(1, (int) round($w * $k)), max(1, (int) round($h * $k)));
+    imagealphablending($dst, false);
+    imagesavealpha($dst, true);
+    imagefill($dst, 0, 0, imagecolorallocatealpha($dst, 255, 255, 255, 127));
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, imagesx($dst), imagesy($dst), $w, $h);
+    $abs = UPLOADS . '/emblema.png';
+    if (is_file($abs)) {
+        @copy($abs, store_private('trash') . '/' . date('Ymd-His') . '__emblema.png');
+    }
+    $tmp = $abs . '.' . bin2hex(random_bytes(3)) . '.tmp';
+    if (!imagepng($dst, $tmp, 6) || !@rename($tmp, $abs)) {
+        @unlink($tmp);
+        throw new RuntimeException('не вдалося зберегти файл на сервері.');
+    }
+    clearstatcache(true, $abs);
+}

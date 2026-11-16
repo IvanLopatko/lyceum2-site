@@ -5,7 +5,7 @@ $sections = array_values(array_filter(taxonomies()['documents'], static fn(array
 <section class="page-head"><div class="wrap">
   <nav class="crumbs" aria-label="Ви тут"><a href="<?= e(url('/')) ?>">Головна</a><span aria-current="page">Документи</span></nav>
   <h1>Документи</h1>
-  <p class="lead">Реєстр документів ліцею за статтею 30 Закону «Про освіту». Біля кожного — дата оприлюднення або стан: документ має з’явитися на сайті протягом 10 робочих днів після затвердження.</p>
+  <p class="lead"><?= e(site_text('documents_lead')) ?></p>
   <nav class="chips chips-nav" aria-label="Розділи реєстру"><?php foreach ($sections as $s): ?><a href="#<?= e($s['slug']) ?>"><?= e($s['name']) ?></a><?php endforeach; ?></nav>
 </div></section>
 <div class="wrap sec-tight registry">

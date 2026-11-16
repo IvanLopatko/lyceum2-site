@@ -6,7 +6,7 @@
  */
 $lists = ['documents.json' => 'Реєстр документів', 'staff.json' => 'Кадровий склад', 'clubs.json' => 'Гуртки'];
 if ($isAdmin) {
-    $lists['settings.json'] = 'Налаштування сайту';
+    $lists += ['home.json' => 'Головна сторінка', 'taxonomies.json' => 'Рубрики й розділи', 'profile-plan.json' => 'План профільної школи', 'settings.json' => 'Налаштування, тексти й меню'];
 }
 
 /** Людська назва файлу: «Сторінка „Контакти“», «Новина „…“». */
@@ -36,7 +36,7 @@ $summary = static function (string $rel, mixed $d): string {
     if (str_starts_with($rel, 'news/')) {
         return 'абзаців: ' . count($d['text'] ?? []) . ' · фото: ' . count(news_photos($d)) . (!empty($d['draft']) ? ' · чернетка' : '');
     }
-    return $rel === 'settings.json' ? 'налаштування' : 'записів: ' . count($d);
+    return in_array($rel, ['settings.json', 'home.json', 'taxonomies.json', 'profile-plan.json'], true) ? 'попередній варіант' : 'записів: ' . count($d);
 };
 $when = static fn(int $t): string => ua_date(date('Y-m-d', $t)) . ', ' . date('H:i', $t);
 

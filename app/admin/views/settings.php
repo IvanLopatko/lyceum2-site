@@ -1,7 +1,8 @@
 <?php if (!defined('ROOT')) { http_response_code(404); exit; } ?>
 <?php $s = settings(); $f = static fn(string $g, string $k): string => e((string) ($s[$g][$k] ?? '')); ?>
 <header class="head"><h1>Налаштування</h1></header>
-<form method="post" class="edit">
+<p class="muted">Назва, контакти, цифри й відповідальні. Тексти розділів і посилання — у розділі <a href="<?= e(url('/admin/teksty/')) ?>">«Тексти й меню»</a>, перший екран і плитки — у <a href="<?= e(url('/admin/holovna/')) ?>">«Головній сторінці»</a>.</p>
+<form method="post" class="edit" enctype="multipart/form-data">
   <?= csrf_field() ?>
   <h2 class="sub">Ліцей</h2>
   <div class="fields">
@@ -11,6 +12,11 @@
     <label>Рік заснування<input name="site_founded" value="<?= $f('site', 'founded') ?>"></label>
     <label>Адреса сайту (з https://)<input name="site_url" type="url" value="<?= $f('site', 'url') ?>" placeholder="https://lyceum2.example.ua"><small class="muted">Потрібна для карти сайту й посилань у соцмережах. Заповніть після запуску на справжньому домені.</small></label>
     <label class="check wide"><input type="checkbox" name="site_demo_bar"<?= !empty($s['site']['demo_bar']) ? ' checked' : '' ?>> Показувати смугу «Зразок сайту», поки є зразкові дані. Поки смуга показується, сайт закритий від пошуковиків</label>
+  </div>
+  <h3 class="sub3">Емблема</h3>
+  <div class="fields">
+    <p class="wide logo-now"><img src="<?= e(asset('/uploads/emblema.png')) ?>" alt="Нинішня емблема" width="72" height="72"> <span class="muted">Емблема в шапці, підвалі й на першому екрані. Найкраще — квадратний PNG з прозорим тлом, від 512 пікселів.</span></p>
+    <label class="upload wide">Замінити емблему (PNG, JPG або WebP, до 5 МБ)<input type="file" name="logo" accept="image/png,image/jpeg,image/webp"></label>
   </div>
   <h2 class="sub">Контакти</h2>
   <div class="fields">
